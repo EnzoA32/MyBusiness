@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onze+ · MyBusiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  :root{
+    --ink:#10150f;
+    --text-soft:#6b716a;
+    --text-faint:#9ba39c;
+    --line:#ececea;
+    --line-strong:#e2e3df;
+    --card:#ffffff;
+
+    --brand-green:#65eb8b;
+    --brand-green-deep:#1d7a44;
+    --side-dark-a:#173d27;
+    --side-dark-b:#0a2015;
+
+    --green-text:#0fa860;
+    --green-tint:#e1faec;
+    --amber-text:#d68a00;
+    --amber-tint:#fdf1da;
+    --rust-text:#e0403a;
+    --rust-tint:#fde7e6;
+
+    --vivid-green:#1fd97a;
+    --vivid-yellow:#ffcd1f;
+    --vivid-red:#ff4d4d;
+
+    --cat-seniors-bg:#e0f2ee;
+    --cat-seniors-text:#127a63;
+    --cat-u17-bg:#e4e9fb;
+    --cat-u17-text:#3d4ea3;
+    --cat-u15-bg:#f2e6fb;
+    --cat-u15-text:#7a3ba3;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; padding:22px;
+    background:#ffffff;
+    min-height:100vh;
+    color:var(--ink);
+    font-family:'Geist',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app-shell{max-width:1320px; margin:0 auto; background:radial-gradient(140% 140% at 15% 10%, #1d5c3a 0%, #123321 55%, #0a2015 100%); border-radius:40px; padding:14px; display:flex; gap:10px; min-height:calc(100vh - 40px); box-shadow:0 30px 60px -24px rgba(8,35,18,0.3);}
+
+  .sidebar{width:78px; flex-shrink:0; background:transparent; padding:10px 0; display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .side-logo{width:40px; height:40px; border-radius:14px; background:#1d5c3a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:17px; margin-bottom:10px;}
+  .side-shield{width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-bottom:16px;}
+  .side-shield.active{background:#fff; color:var(--side-dark-b);}
+  .side-group{background:rgba(255,255,255,0.08); border-radius:26px; padding:8px 6px; display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
+  .side-icon{width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.55); font-size:16px; cursor:pointer;}
+  .side-icon.active{background:#fff; color:var(--side-dark-b);}
+  .side-icon:hover:not(.active){color:#fff;}
+  .side-spacer{flex:1;}
+
+  .main{flex:1; min-width:0; display:flex; flex-direction:column; overflow-y:auto; background:#fff; border-radius:30px; padding:22px 30px;}
+  .topbar2{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
+  .wordmark{display:flex; align-items:center; gap:9px; font-weight:700; font-size:16px;}
+  .wordmark .mark{width:27px; height:27px; border-radius:9px; background:var(--brand-green); color:var(--side-dark-b); display:flex; align-items:center; justify-content:center; font-size:12px;}
+  .top-pills{display:flex; gap:10px;}
+  .pill-club{display:flex; align-items:center; gap:8px; background:#fdeceb; color:#8a2f28; padding:6px 16px 6px 6px; border-radius:999px; font-size:12.5px; font-weight:600;}
+  .pill-club .ic{width:26px; height:26px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;}
+  .pill-user{display:flex; align-items:center; gap:8px; background:var(--side-dark-a); color:#fff; padding:6px 16px 6px 6px; border-radius:999px; font-size:12.5px; font-weight:600;}
+  .pill-user .ic{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:11px;}
+
+  .date-line{color:var(--brand-green-deep); font-size:12.5px; font-weight:600; margin-bottom:3px;}
+  .page-title-big{font-size:28px; font-weight:800; color:var(--ink); margin-bottom:6px; letter-spacing:-0.01em;}
+
+  .info-chips{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+  .info-chip{display:flex; align-items:center; gap:8px; background:var(--green-tint); color:var(--green-text); border-radius:999px; padding:7px 16px; font-size:12px; font-weight:600;}
+  .info-chip i{font-size:12px;}
+  .info-chip.muted{background:#f2f2f0; color:var(--text-soft);}
+
+  /* ---------- stat cards ---------- */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px 16px; display:flex; align-items:center; gap:12px;}
+  .stat-icon{width:38px; height:38px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+  .stat-icon.ink{background:var(--green-tint); color:var(--brand-green-deep);}
+  .stat-icon.green{background:var(--green-tint); color:var(--green-text);}
+  .stat-icon.amber{background:var(--amber-tint); color:var(--amber-text);}
+  .stat-icon.rust{background:var(--rust-tint); color:var(--rust-text);}
+  .stat-label{font-size:11px; color:var(--text-soft); margin-bottom:2px;}
+  .stat-value{font-weight:700; font-size:19px;}
+
+  /* ---------- bento dashboard ---------- */
+  .bento-row{display:grid; gap:16px; margin-bottom:16px;}
+  .bento-row.row-a{grid-template-columns:2fr 1fr;}
+  .bento-row.row-b{grid-template-columns:1fr 1fr 1fr;}
+  .tile{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:18px;}
+  .tile-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .tile-head h3{margin:0; font-size:14.5px; font-weight:700;}
+  .tile-link{font-size:11.5px; color:var(--text-soft); cursor:pointer; display:flex; align-items:center; gap:3px;}
+  .tile-link:hover{color:var(--ink);}
+
+  .bar-row{margin-bottom:16px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-row-head{display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;}
+  .bar-row-head .cat{font-weight:600;}
+  .bar-row-head .n{color:var(--text-faint); font-weight:600;}
+  .bar-track{display:flex; height:14px; border-radius:8px; overflow:hidden; background:#f1f1ef;}
+  .bar-seg{height:100%;}
+
+  .donut-wrap{display:flex; align-items:center; gap:16px;}
+  .donut-legend{flex:1; display:flex; flex-direction:column; gap:9px;}
+  .donut-legend-row{display:flex; align-items:center; gap:8px; font-size:12px;}
+  .donut-legend-dot{width:9px; height:9px; border-radius:50%; flex-shrink:0;}
+  .donut-legend-val{margin-left:auto; font-weight:700; font-size:12px;}
+
+  .reminder-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:12.5px;}
+  .reminder-row:last-child{border-bottom:none;}
+  .reminder-row.done .reminder-label{text-decoration:line-through; color:var(--text-faint);}
+  .reminder-check{width:18px; height:18px; border-radius:50%; border:1.5px solid var(--line-strong); flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .reminder-row.done .reminder-check{background:var(--vivid-green); border-color:var(--vivid-green); color:#0a2015;}
+  .reminder-due{color:var(--text-faint); font-size:10.5px; margin-left:auto; font-weight:600;}
+
+  .doc-row{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line);}
+  .doc-row:last-child{border-bottom:none;}
+  .doc-icon{width:32px; height:32px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;}
+  .doc-name{font-size:12px; font-weight:600;}
+  .doc-status{font-size:10px; margin-left:auto; padding:2px 8px; border-radius:999px; font-weight:600;}
+  .doc-status.ok{background:var(--green-tint); color:var(--green-text);}
+  .doc-status.warn{background:var(--amber-tint); color:var(--amber-text);}
+
+  .quicklinks{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:26px;}
+  .quick-pill{display:flex; align-items:center; gap:8px; border:1px solid var(--line-strong); background:#fff; border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:600; color:var(--ink); cursor:pointer;}
+  .quick-pill i{font-size:14px; color:var(--brand-green-deep);}
+  .quick-pill:hover{border-color:#c7ccc6;}
+
+  /* ---------- pill filters ---------- */
+  .filters{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+  .pill-select, .pill-search, .btn-pill{height:40px; border-radius:999px; border:1px solid var(--line-strong); background:#f7f7f6; font-family:'Geist'; font-size:12.5px; color:var(--ink); display:flex; align-items:center;}
+  .pill-select{padding:0 26px 0 12px; gap:8px; cursor:pointer; position:relative;}
+  .pill-select select{appearance:none; -webkit-appearance:none; border:none; background:transparent; font-family:'Geist'; font-size:12.5px; color:var(--ink); cursor:pointer;}
+  .pill-select i{font-size:13px; color:var(--text-faint);}
+  .pill-select::after{content:''; position:absolute; right:12px; top:50%; width:7px; height:7px; border-right:1.5px solid var(--text-faint); border-bottom:1.5px solid var(--text-faint); transform:translateY(-65%) rotate(45deg); pointer-events:none;}
+  .pill-search{padding:0 14px; gap:8px; width:230px;}
+  .pill-search i{font-size:13px; color:var(--text-faint);}
+  .pill-search input{border:none; background:transparent; outline:none; font-family:'Geist'; font-size:12.5px; flex:1; color:var(--ink);}
+  .pill-search .kbd{font-size:10.5px; color:var(--text-faint); border:1px solid var(--line-strong); border-radius:5px; padding:2px 5px;}
+  .btn-pill{padding:0 16px; gap:6px; cursor:pointer; font-weight:600;}
+  .btn-pill.ghost:hover{border-color:#cfd0d6;}
+  .btn-pill.solid{background:var(--brand-green); border-color:var(--brand-green); color:var(--side-dark-b); font-weight:700; margin-left:auto;}
+  .btn-pill.solid:hover{filter:brightness(0.96);}
+  .seg{display:flex; background:#f7f7f6; border:1px solid var(--line-strong); border-radius:999px; padding:3px;}
+  .seg button{border:none; background:transparent; font-family:'Geist'; font-size:12.5px; font-weight:600; padding:7px 16px; border-radius:999px; cursor:pointer; color:var(--text-soft);}
+  .seg button.active{background:var(--side-dark-a); color:#fff;}
+  .chip{border:1px solid var(--line-strong); background:#f7f7f6; border-radius:999px; padding:7px 14px; font-size:12px; color:var(--text-soft); cursor:pointer;}
+  .chip.active{background:var(--side-dark-a); color:#fff; border-color:var(--side-dark-a);}
+
+  /* ---------- column head ---------- */
+  .col-head{display:flex; align-items:center; padding:0 18px 8px; gap:14px; font-size:11px; letter-spacing:.03em; text-transform:uppercase; color:var(--text-faint); font-weight:600;}
+  .col-head span{cursor:pointer; display:flex; align-items:center; gap:4px;}
+  .col-head span i{font-size:11px;}
+  .c-player{width:34px;}
+  .c-name{flex:1.6; min-width:0;}
+  .c-email{flex:1.5;}
+  .c-phone{flex:1;}
+  .c-status{width:120px;}
+  .c-cotis{width:140px;}
+  .c-chev{width:18px;}
+
+  .group-head{display:flex; justify-content:space-between; align-items:baseline; padding:16px 18px 8px; margin-top:4px; border-bottom:1px solid var(--line);}
+  .group-head .name{font-weight:700; font-size:14.5px;}
+  .group-head .count{color:var(--text-faint); font-weight:400; font-size:12.5px;}
+  .group-head .breakdown{font-size:11.5px; color:var(--text-soft); font-weight:600;}
+
+  .list{background:var(--card); border:1px solid var(--line); border-radius:20px; overflow:hidden; margin-bottom:16px;}
+  .row{display:flex; align-items:center; gap:14px; padding:11px 18px; border-bottom:1px solid var(--line); cursor:pointer;}
+  .row:last-child{border-bottom:none;}
+  .row:hover{background:#f7f9f7;}
+  .row input[type=checkbox]{margin:0;}
+  .kit{width:34px; height:34px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;}
+  .kit.seniors{background:var(--cat-seniors-bg); color:var(--cat-seniors-text);}
+  .kit.u17{background:var(--cat-u17-bg); color:var(--cat-u17-text);}
+  .kit.u15{background:var(--cat-u15-bg); color:var(--cat-u15-text);}
+  .name-col{flex:1.6; min-width:0;}
+  .player-name{font-weight:600; font-size:13.5px;}
+  .player-num{color:var(--text-faint); font-size:11px; font-weight:600;}
+  .email-col, .phone-col{font-size:12.5px; color:var(--text-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .email-col{flex:1.5;}
+  .phone-col{flex:1;}
+  .status-col{width:120px; display:flex; align-items:center; gap:7px; font-size:12.5px;}
+  .dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .dot.green{background:var(--green-text);}
+  .dot.amber{background:var(--amber-text);}
+  .dot.rust{background:var(--rust-text);}
+  .cotis-col{width:140px; display:flex; align-items:center; gap:8px;}
+  .gauge{flex:1; height:6px; background:#eef0ed; border-radius:20px; overflow:hidden;}
+  .gauge-fill{height:100%; border-radius:20px;}
+  .cotis-value{font-size:11.5px; font-weight:700; width:32px; text-align:right;}
+  .chev{width:18px; color:var(--text-faint); font-size:13px; text-align:right;}
+
+  .pagination{display:flex; justify-content:center; gap:6px; margin-top:6px;}
+  .page-pill{width:30px; height:30px; border-radius:50%; border:1px solid var(--line-strong); background:#f7f7f6; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text-soft); cursor:pointer;}
+  .page-pill.active{background:var(--brand-green); color:var(--side-dark-b); border-color:var(--brand-green); font-weight:700;}
+
+  /* ---------- overlay / drawer / modal ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(10,25,15,0.4); display:none; align-items:stretch; justify-content:flex-end; z-index:50;}
+  .overlay.center{align-items:center; justify-content:center;}
+  .overlay.show{display:flex;}
+  .drawer{width:380px; background:#fff; height:100%; padding:26px; overflow-y:auto;}
+  .drawer-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;}
+  .drawer-close{border:none; background:#f4f4f5; width:30px; height:30px; border-radius:50%; cursor:pointer; color:var(--text-soft);}
+  .drawer-kit{width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; margin-bottom:10px;}
+  .drawer-name{font-weight:700; font-size:18px;}
+  .drawer-tag{display:inline-block; font-size:11.5px; padding:3px 10px; border-radius:999px; margin-top:6px; font-weight:600;}
+  .drawer-section{margin-top:20px; padding-top:16px; border-top:1px solid var(--line);}
+  .drawer-section h4{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); margin:0 0 10px;}
+  .drawer-row{display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px;}
+  .drawer-row .label{color:var(--text-soft); display:flex; align-items:center; gap:8px;}
+  .drawer-row .value{font-weight:600;}
+  .echeance{display:flex; justify-content:space-between; font-size:12.5px; padding:5px 0; color:var(--text-soft);}
+  .echeance .paid{color:var(--green-text); font-weight:600;}
+
+  .modal{width:480px; max-width:92vw; background:#fff; border-radius:24px; padding:26px; max-height:90vh; overflow-y:auto;}
+  .modal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+  .modal-head h3{margin:0; font-size:17px; font-weight:700;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; color:var(--text-soft); margin-bottom:6px;}
+  .field input, .field select, .field textarea{width:100%; height:38px; border-radius:11px; border:1px solid var(--line-strong); background:#f7f7f6; padding:0 12px; font-family:'Geist'; font-size:13px; color:var(--ink);}
+  .field textarea{height:64px; padding:10px 12px; resize:vertical;}
+  .field-row{display:flex; gap:12px;}
+  .field-row .field{flex:1;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:18px;}
+  .btn-ghost{border:1px solid var(--line-strong); background:#fff; border-radius:999px; padding:0 18px; height:38px; font-family:'Geist'; font-size:12.5px; font-weight:600; cursor:pointer; color:var(--text-soft);}
+  .btn-solid{border:none; background:var(--brand-green); color:var(--side-dark-b); border-radius:999px; padding:0 18px; height:38px; font-family:'Geist'; font-size:12.5px; font-weight:700; cursor:pointer;}
+
+  /* ---------- Mon club ---------- */
+  .club-card{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:24px; max-width:640px;}
+  .club-logo-row{display:flex; align-items:center; gap:16px; margin-bottom:22px;}
+  .club-logo{width:64px; height:64px; border-radius:18px; background:var(--side-dark-a); display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--brand-green); font-size:18px;}
+  .terrain-row{display:flex; gap:10px; align-items:center; margin-bottom:10px;}
+  .terrain-row input{flex:1;}
+  .icon-x{width:34px; height:34px; border-radius:11px; border:1px solid var(--line-strong); background:#fff; color:var(--text-soft); cursor:pointer; flex-shrink:0;}
+  .add-terrain{border:1px dashed var(--line-strong); background:transparent; border-radius:11px; height:38px; width:100%; color:var(--text-soft); font-family:'Geist'; font-size:12.5px; cursor:pointer; margin-top:2px;}
+  .toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%); background:var(--side-dark-a); color:#fff; padding:10px 20px; border-radius:999px; font-size:12.5px; opacity:0; pointer-events:none; transition:opacity .25s; z-index:60;}
+  .toast.show{opacity:1;}
+
+  /* ---------- horaire ---------- */
+  .month-nav{display:flex; align-items:center; gap:10px;}
+  .month-arrow{width:34px; height:34px; border-radius:50%; border:1px solid var(--line-strong); background:#f7f7f6; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-soft);}
+  .month-label{font-weight:700; font-size:14.5px; min-width:110px; text-align:center;}
+
+  .legend{display:flex; gap:16px; align-items:center; margin:14px 0 16px; font-size:12px; color:var(--text-soft);}
+  .legend-item{display:flex; align-items:center; gap:6px;}
+  .legend-dot{width:9px; height:9px; border-radius:50%;}
+
+  .planning-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:20px;}
+  .planning-grid{display:grid; grid-template-columns:130px repeat(7, minmax(126px, 1fr)); min-width:940px;}
+  .planning-cell{border-right:1px solid var(--line); border-bottom:1px solid var(--line); padding:7px; min-height:96px;}
+  .planning-grid > *:nth-child(8n)  {border-right:none;}
+  .planning-head{background:#f7f7f6; font-size:11.5px; font-weight:700; color:var(--text-soft); padding:10px 12px; display:flex; align-items:center;}
+  .planning-terrain{background:#f7f7f6; font-size:12.5px; font-weight:700; display:flex; align-items:center; padding:10px 12px;}
+  .plan-tile{border-radius:13px; padding:8px 10px; font-size:11px; margin-bottom:6px; box-shadow:0 2px 5px -3px rgba(0,0,0,0.15);}
+  .plan-tile:last-child{margin-bottom:0;}
+  .plan-tile .t-time{font-weight:700; font-size:10.5px;}
+  .plan-tile .t-team{font-weight:700; margin-top:2px;}
+
+  .empty-view{padding:60px 20px; text-align:center; color:var(--text-soft);}
+  .empty-view i{font-size:26px; color:var(--text-faint); margin-bottom:10px; display:block;}
+
+  ::placeholder{color:var(--text-faint);}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar">
+    <div class="side-logo"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+    <div class="side-shield" data-view="club"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+    <div class="side-group">
+      <div class="side-icon active" data-view="dashboard"><i class="fa-solid fa-house" aria-hidden="true"></i></div>
+      <div class="side-icon" data-view="joueurs"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+      <div class="side-icon" data-view="horaire"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></div>
+    </div>
+    <div class="side-group">
+      <div class="side-icon" data-view="cotisations"><i class="fa-solid fa-receipt" aria-hidden="true"></i></div>
+      <div class="side-icon" data-view="documents"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></div>
+    </div>
+    <div class="side-spacer"></div>
+    <div class="side-icon" data-view="parametres"><i class="fa-solid fa-gear" aria-hidden="true"></i></div>
+  </div>
+
+  <div class="main">
+    <div class="topbar2">
+      <div class="wordmark"><div class="mark"><i class="fa-solid fa-star" aria-hidden="true"></i></div>MyBusiness</div>
+      <div class="top-pills">
+        <div class="pill-club"><span class="ic"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>Rus Hensies</div>
+        <div class="pill-user"><span class="ic"><i class="fa-solid fa-user" aria-hidden="true"></i></span>Josiah S.</div>
+      </div>
+    </div>
+
+    <div class="date-line" id="dateLine">Jeudi 09 Juillet</div>
+    <div class="page-title-big" id="pageTitleBig">Dashboard</div>
+
+    <div id="content"></div>
+  </div>
+
+</div>
+
+<div class="overlay" id="drawerOverlay"><div class="drawer" id="drawer"></div></div>
+<div class="overlay center" id="modalOverlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+let players = [
+  {name:'Chloé Dubois', number:30, category:'Seniors F', status:'affilie', cotis:100, email:'c.dubois@mail.com', phone:'0470 00 00 01', address:'Rue des Tilleuls 12, Hensies', birth:'14/03/1999', licence:'BLG-84021'},
+  {name:'Sasha Goret', number:7, category:'Seniors F', status:'pret_entrant', cotis:55, email:'s.goret@mail.com', phone:'0470 00 00 02', address:'Chaussée de Mons 4, Quiévrain', birth:'02/09/2001', licence:'BLG-71230'},
+  {name:'Pamela Cirinna', number:10, category:'Seniors F', status:'affilie', cotis:100, email:'p.cirinna@mail.com', phone:'0470 00 00 03', address:'Rue Neuve 8, Hensies', birth:'21/11/1998', licence:'BLG-55012'},
+  {name:'Noémie Avaux', number:6, category:'Seniors F', status:'affilie', cotis:40, email:'n.avaux@mail.com', phone:'0470 00 00 04', address:'Rue du Moulin 3, Thulin', birth:'09/06/2000', licence:'BLG-63981'},
+  {name:'Pauline Foriez', number:2, category:'U17', status:'pret_sortant', cotis:0, email:'p.foriez@mail.com', phone:'0470 00 00 05', address:'Rue de la Gare 21, Hensies', birth:'17/02/2009', licence:'BLG-90233'},
+  {name:'Kelya Namur', number:9, category:'U17', status:'affilie', cotis:80, email:'k.namur@mail.com', phone:'0470 00 00 06', address:'Rue Basse 6, Hensies', birth:'30/07/2008', licence:'BLG-90811'},
+  {name:'Thalia Degroote', number:3, category:'U17', status:'affilie', cotis:100, email:'t.degroote@mail.com', phone:'0470 00 00 07', address:'Rue Haute 14, Thulin', birth:'12/01/2008', licence:'BLG-90455'},
+  {name:'Inès Demeuldre', number:1, category:'U15', status:'affilie', cotis:100, email:'i.demeuldre@mail.com', phone:'0470 00 00 08', address:'Rue des Peupliers 9, Hensies', birth:'05/05/2010', licence:'BLG-91120'},
+  {name:'Fiona Lechien', number:17, category:'U15', status:'affilie', cotis:20, email:'f.lechien@mail.com', phone:'0470 00 00 09', address:'Rue de l\'Église 2, Quiévrain', birth:'19/10/2010', licence:'BLG-91344'}
+];
+
+const dayOrder = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+let sessionsByMonth = {
+  'Février 2026': [
+    {day:'Lundi', time:'18:00 - 19:30', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Mercredi', time:'18:30 - 20:00', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Vendredi', time:'18:00 - 19:15', team:'U17', category:'U17', field:'Terrain A'}
+  ],
+  'Mars 2026': [
+    {day:'Lundi', time:'18:00 - 19:30', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Lundi', time:'19:30 - 21:00', team:'U17', category:'U17', field:'Terrain B'},
+    {day:'Mercredi', time:'17:00 - 18:15', team:'U15', category:'U15', field:'Terrain B'},
+    {day:'Mercredi', time:'18:30 - 20:00', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Vendredi', time:'18:00 - 19:15', team:'U17', category:'U17', field:'Terrain A'},
+    {day:'Vendredi', time:'19:15 - 20:45', team:'Seniors F', category:'Seniors F', field:'Terrain B'}
+  ],
+  'Avril 2026': [
+    {day:'Lundi', time:'18:00 - 19:30', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Mardi', time:'18:00 - 19:15', team:'U15', category:'U15', field:'Terrain A'},
+    {day:'Mercredi', time:'18:30 - 20:00', team:'Seniors F', category:'Seniors F', field:'Terrain A'},
+    {day:'Vendredi', time:'18:00 - 19:15', team:'U17', category:'U17', field:'Terrain A'},
+    {day:'Vendredi', time:'19:15 - 20:45', team:'Seniors F', category:'Seniors F', field:'Terrain B'}
+  ]
+};
+let currentMonth = 'Mars 2026';
+let horaireCategory = 'all';
+
+let terrains = ['Terrain A - Rue du Stade 1, Hensies', 'Terrain B - Rue du Stade 3, Hensies'];
+
+let staff = [
+  {name:'Marc Delvaux', role:'Entraîneur principal', team:'Seniors F', email:'m.delvaux@mail.com', phone:'0470 11 22 33', status:'actif'},
+  {name:'Julie Petit', role:'Kinésithérapeute', team:'Toutes équipes', email:'j.petit@mail.com', phone:'0470 22 33 44', status:'actif'},
+  {name:'Ahmed Naciri', role:'Entraîneur adjoint', team:'U17', email:'a.naciri@mail.com', phone:'0470 33 44 55', status:'actif'},
+  {name:'Sophie Renard', role:'Secrétaire du club', team:'Toutes équipes', email:'s.renard@mail.com', phone:'0470 44 55 66', status:'inactif'}
+];
+const staffRoles = ['Entraîneur principal','Entraîneur adjoint','Kinésithérapeute','Secrétaire du club','Dirigeant','Arbitre du club'];
+const staffTeams = ['Toutes équipes','Seniors F','U17','U15'];
+
+let reminders = [
+  {label:"Renouveler l'assurance dirigeants", due:'15/08', done:false},
+  {label:'Envoyer les rappels de cotisation U15', due:'20/07', done:false},
+  {label:'Réserver le terrain pour le tournoi', due:'—', done:true}
+];
+
+const documents = [
+  {name:'Assurance club', icon:'fa-shield-halved', status:'ok', date:'Exp. 30/06/2027', bg:'#e0f2ee', color:'#127a63'},
+  {name:'Mutuelle joueurs', icon:'fa-heart', status:'ok', date:'Exp. 01/01/2027', bg:'#fde7e6', color:'#e0403a'},
+  {name:'Statuts du club', icon:'fa-file-lines', status:'ok', date:'À jour', bg:'#e4e9fb', color:'#3d4ea3'},
+  {name:'Assurance RC', icon:'fa-triangle-exclamation', status:'warn', date:'Exp. 12/07/2026', bg:'#fdf1da', color:'#d68a00'}
+];
+
+const pageTitles = {dashboard:'Dashboard', joueurs:'Joueurs', club:'Mon club', horaire:'Horaire', cotisations:'Cotisations', documents:'Documents', parametres:'Paramètres'};
+
+const statusMap = {
+  affilie:      {label:'Affilié',       dot:'green'},
+  pret_entrant: {label:'Prêt entrant',  dot:'amber'},
+  pret_sortant: {label:'Prêt sortant',  dot:'rust'}
+};
+const catClass = {'Seniors F':'seniors', 'U17':'u17', 'U15':'u15'};
+function catInitial(c){ return c === 'Seniors F' ? 'SF' : c; }
+function cotisTint(v){
+  if(v >= 80) return {fill:'var(--green-text)', text:'var(--green-text)'};
+  if(v > 0)   return {fill:'var(--amber-text)', text:'var(--amber-text)'};
+  return {fill:'var(--rust-text)', text:'var(--rust-text)'};
+}
+
+const listState = {grouped:true, sortKey:'name', sortDir:'asc', query:'', category:'all'};
+let rosterMode = 'joueurs';
+const staffListState = {sortKey:'name', sortDir:'asc', query:'', team:'all'};
+
+(function setDate(){
+  const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const d = new Date();
+  document.getElementById('dateLine').textContent = days[d.getDay()] + ' ' + String(d.getDate()).padStart(2,'0') + ' ' + months[d.getMonth()];
+})();
+
+function setActiveView(view){
+  document.querySelectorAll('.side-icon, .side-shield').forEach(function(n){ n.classList.toggle('active', n.dataset.view === view); });
+  document.getElementById('pageTitleBig').textContent = pageTitles[view] || 'Dashboard';
+}
+document.querySelectorAll('.side-icon[data-view], .side-shield[data-view]').forEach(function(el){
+  el.addEventListener('click', function(){
+    setActiveView(el.dataset.view);
+    renderView(el.dataset.view);
+  });
+});
+function goTo(view){ setActiveView(view); renderView(view); }
+
+function renderView(view){
+  const content = document.getElementById('content');
+  if(view === 'dashboard'){ renderDashboard(); }
+  else if(view === 'joueurs'){ renderJoueurs(); }
+  else if(view === 'club'){ renderClub(); }
+  else if(view === 'horaire'){ renderHoraire(); }
+  else { content.innerHTML = '<div class="empty-view"><i class="fa-solid fa-hammer" aria-hidden="true"></i>Bientôt disponible</div>'; }
+}
+
+function buildDonut(segments, centerLabel, centerValue){
+  const r = 42, cx = 55, cy = 55, sw = 14;
+  const circ = 2 * Math.PI * r;
+  let offset = 0;
+  let circles = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#eef0ee" stroke-width="' + sw + '"></circle>';
+  segments.forEach(function(s){
+    const len = (s.value / 100) * circ;
+    circles += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + s.color + '" stroke-width="' + sw + '" stroke-dasharray="' + len + ' ' + (circ - len) + '" stroke-dashoffset="' + (-offset) + '" stroke-linecap="round" transform="rotate(-90 ' + cx + ' ' + cy + ')"></circle>';
+    offset += len;
+  });
+  return '<svg width="110" height="110" viewBox="0 0 110 110">' + circles +
+    '<text x="55" y="51" text-anchor="middle" font-family="Geist, sans-serif" font-weight="800" font-size="19" fill="var(--ink)">' + centerValue + '</text>' +
+    '<text x="55" y="67" text-anchor="middle" font-family="Geist, sans-serif" font-size="9" fill="var(--text-faint)">' + centerLabel + '</text>' +
+  '</svg>';
+}
+
+function buildLineChart(values){
+  const w = 280, h = 110, pad = 14;
+  const max = Math.max.apply(null, values), min = Math.min.apply(null, values);
+  const range = (max - min) || 1;
+  const stepX = (w - pad * 2) / (values.length - 1);
+  const pts = values.map(function(v, i){
+    const x = pad + i * stepX;
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return [x, y];
+  });
+  const line = pts.map(function(p, i){ return (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+  const area = line + ' L' + pts[pts.length-1][0].toFixed(1) + ',' + (h-pad) + ' L' + pts[0][0].toFixed(1) + ',' + (h-pad) + ' Z';
+  const dots = pts.map(function(p){ return '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.2" fill="#1fd97a"></circle>'; }).join('');
+  return '<svg width="100%" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+    '<defs><linearGradient id="lineFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1fd97a" stop-opacity="0.28"/><stop offset="100%" stop-color="#1fd97a" stop-opacity="0"/></linearGradient></defs>' +
+    '<path d="' + area + '" fill="url(#lineFade)"></path>' +
+    '<path d="' + line + '" fill="none" stroke="#1fd97a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>' +
+    dots +
+  '</svg>';
+}
+
+function renderDashboard(){
+  const ok = players.filter(function(p){ return p.cotis >= 80; }).length;
+  const late = players.filter(function(p){ return p.cotis === 0; }).length;
+  const mid = players.length - ok - late;
+  const total = players.length;
+
+  const upcoming = [];
+  dayOrder.forEach(function(day){
+    (sessionsByMonth[currentMonth] || []).filter(function(s){ return s.day === day; }).forEach(function(s){ upcoming.push(s); });
+  });
+  const nextSession = upcoming[0];
+  const nextReminder = reminders.find(function(r){ return !r.done; });
+
+  const donut = buildDonut([
+    {value: Math.round(ok/total*100), color:'#1fd97a'},
+    {value: Math.round(mid/total*100), color:'#ffcd1f'},
+    {value: Math.round(late/total*100), color:'#ff4d4d'}
+  ], 'affiliés', total);
+
+  const categories = ['Seniors F','U17','U15'];
+  const barsHtml = categories.map(function(cat){
+    const list = players.filter(function(p){ return p.category === cat; });
+    const cOk = list.filter(function(p){ return p.cotis >= 80; }).length;
+    const cLate = list.filter(function(p){ return p.cotis === 0; }).length;
+    const cMid = list.length - cOk - cLate;
+    const n = list.length || 1;
+    return '<div class="bar-row">' +
+      '<div class="bar-row-head"><span class="cat">' + cat + '</span><span class="n">' + list.length + ' joueuses</span></div>' +
+      '<div class="bar-track">' +
+        '<div class="bar-seg" style="width:' + (cOk/n*100) + '%; background:#1fd97a;"></div>' +
+        '<div class="bar-seg" style="width:' + (cMid/n*100) + '%; background:#ffcd1f;"></div>' +
+        '<div class="bar-seg" style="width:' + (cLate/n*100) + '%; background:#ff4d4d;"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  const lineChart = buildLineChart([54, 58, 61, 65, 63, Math.round(ok/total*100)]);
+
+  const content = document.getElementById('content');
+  content.innerHTML =
+
+    '<div class="info-chips">' +
+      '<div class="info-chip"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>' + (nextSession ? (nextSession.day + ' · ' + nextSession.time + ' · ' + nextSession.team) : 'Aucune séance planifiée') + '</div>' +
+      '<div class="info-chip muted"><i class="fa-solid fa-bell" aria-hidden="true"></i>' + (nextReminder ? nextReminder.label : 'Aucun rappel en attente') + '</div>' +
+    '</div>' +
+
+    '<div class="stats">' +
+      '<div class="stat"><div class="stat-icon ink"><i class="fa-solid fa-users" aria-hidden="true"></i></div><div><div class="stat-label">Affiliés</div><div class="stat-value">' + total + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon green"><i class="fa-solid fa-check" aria-hidden="true"></i></div><div><div class="stat-label">À jour</div><div class="stat-value">' + ok + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon amber"><i class="fa-solid fa-clock" aria-hidden="true"></i></div><div><div class="stat-label">Échelonnées</div><div class="stat-value">' + mid + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon rust"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></div><div><div class="stat-label">Impayées</div><div class="stat-value">' + late + '</div></div></div>' +
+    '</div>' +
+
+    '<div class="bento-row row-a">' +
+      '<div class="tile"><div class="tile-head"><h3>Cotisations par catégorie</h3></div>' + barsHtml + '</div>' +
+      '<div class="tile"><div class="tile-head"><h3>Répartition globale</h3></div>' +
+        '<div class="donut-wrap">' + donut +
+          '<div class="donut-legend">' +
+            '<div class="donut-legend-row"><span class="donut-legend-dot" style="background:#1fd97a;"></span>À jour<span class="donut-legend-val">' + ok + '</span></div>' +
+            '<div class="donut-legend-row"><span class="donut-legend-dot" style="background:#ffcd1f;"></span>Échelonnées<span class="donut-legend-val">' + mid + '</span></div>' +
+            '<div class="donut-legend-row"><span class="donut-legend-dot" style="background:#ff4d4d;"></span>Impayées<span class="donut-legend-val">' + late + '</span></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="bento-row row-b">' +
+      '<div class="tile"><div class="tile-head"><h3>Évolution sur 6 mois</h3></div>' + lineChart + '</div>' +
+      '<div class="tile"><div class="tile-head"><h3>Rappels</h3><i class="fa-solid fa-plus tile-link" aria-hidden="true"></i></div><div id="reminderMount"></div></div>' +
+      '<div class="tile"><div class="tile-head"><h3>Documents</h3><span class="tile-link">Gérer</span></div>' +
+        documents.map(function(d){
+          return '<div class="doc-row"><div class="doc-icon" style="background:' + d.bg + '; color:' + d.color + ';"><i class="fa-solid ' + d.icon + '" aria-hidden="true"></i></div><div><div class="doc-name">' + d.name + '</div><div style="font-size:10.5px; color:var(--text-faint);">' + d.date + '</div></div><span class="doc-status ' + d.status + '">' + (d.status === 'ok' ? 'À jour' : 'À renouveler') + '</span></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="quicklinks">' +
+      '<div class="quick-pill" data-go="joueurs"><i class="fa-solid fa-users" aria-hidden="true"></i>Joueurs</div>' +
+      '<div class="quick-pill" data-go="horaire"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i>Horaire</div>' +
+      '<div class="quick-pill" data-go="documents"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>Documents</div>' +
+    '</div>';
+
+  renderReminders();
+  content.querySelectorAll('.quick-pill').forEach(function(q){ q.addEventListener('click', function(){ goTo(q.dataset.go); }); });
+}
+
+function renderReminders(){
+  document.getElementById('reminderMount').innerHTML = reminders.map(function(r, i){
+    return '<div class="reminder-row ' + (r.done ? 'done' : '') + '"><span class="reminder-check" data-i="' + i + '"><i class="fa-solid fa-check" style="font-size:10px; visibility:' + (r.done ? 'visible' : 'hidden') + '" aria-hidden="true"></i></span><span class="reminder-label">' + r.label + '</span><span class="reminder-due">' + r.due + '</span></div>';
+  }).join('');
+  document.querySelectorAll('.reminder-check').forEach(function(el){
+    el.addEventListener('click', function(){
+      const i = parseInt(el.dataset.i);
+      reminders[i].done = !reminders[i].done;
+      renderReminders();
+    });
+  });
+}
+
+function renderJoueurs(){
+  document.getElementById('content').innerHTML = '<div id="rosterBody"></div>';
+  renderRosterBody();
+}
+
+function switchRosterMode(mode){
+  rosterMode = mode;
+  renderRosterBody();
+}
+
+function segHtml(){
+  return '<div class="seg">' +
+    '<button class="' + (rosterMode === 'joueurs' ? 'active' : '') + '" data-mode="joueurs">Joueurs</button>' +
+    '<button class="' + (rosterMode === 'staff' ? 'active' : '') + '" data-mode="staff">Staff</button>' +
+  '</div>';
+}
+
+function renderRosterBody(){
+  const mount = document.getElementById('rosterBody');
+
+  if(rosterMode === 'joueurs'){
+    mount.innerHTML =
+      '<div class="stats">' +
+        '<div class="stat"><div class="stat-icon ink"><i class="fa-solid fa-users" aria-hidden="true"></i></div><div><div class="stat-label">Affiliés</div><div class="stat-value" id="statTotal">0</div></div></div>' +
+        '<div class="stat"><div class="stat-icon green"><i class="fa-solid fa-check" aria-hidden="true"></i></div><div><div class="stat-label">À jour</div><div class="stat-value" id="statOk">0</div></div></div>' +
+        '<div class="stat"><div class="stat-icon amber"><i class="fa-solid fa-clock" aria-hidden="true"></i></div><div><div class="stat-label">Échelonnées</div><div class="stat-value" id="statMid">0</div></div></div>' +
+        '<div class="stat"><div class="stat-icon rust"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></div><div><div class="stat-label">Impayées</div><div class="stat-value" id="statLate">0</div></div></div>' +
+      '</div>' +
+      '<div class="filters">' +
+        segHtml() +
+        '<div class="pill-select"><i class="fa-solid fa-shield" aria-hidden="true"></i><select id="categoryFilter"><option value="all">Toutes catégories</option><option value="Seniors F">Seniors F</option><option value="U17">U17</option><option value="U15">U15</option></select></div>' +
+        '<div class="pill-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="search" placeholder="Rechercher un joueur" /><span class="kbd">⌘K</span></div>' +
+        '<button class="btn-pill ghost" id="toggleGroup"><i class="fa-solid fa-table-cells" aria-hidden="true"></i><span id="toggleLabel">Voir tout</span></button>' +
+        '<button class="btn-pill solid" id="openAdd"><i class="fa-solid fa-plus" aria-hidden="true"></i>Ajouter un affilié</button>' +
+      '</div>' +
+      '<div class="col-head">' +
+        '<span class="c-player"></span>' +
+        '<span class="c-name" id="sortName">Joueur <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span>' +
+        '<span class="c-email"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</span>' +
+        '<span class="c-phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> Téléphone</span>' +
+        '<span class="c-status" id="sortStatus">Statut <i class="fa-solid fa-arrow-up" style="visibility:hidden" aria-hidden="true"></i></span>' +
+        '<span class="c-cotis" id="sortCotis">Cotisation <i class="fa-solid fa-arrow-up" style="visibility:hidden" aria-hidden="true"></i></span>' +
+        '<span class="c-chev"></span>' +
+      '</div>' +
+      '<div id="playerListMount"></div>' +
+      '<div class="pagination"><div class="page-pill">‹</div><div class="page-pill active">1</div><div class="page-pill">2</div><div class="page-pill">›</div></div>';
+
+    document.getElementById('categoryFilter').addEventListener('change', function(e){ listState.category = e.target.value; renderPlayerList(); });
+    document.getElementById('search').addEventListener('input', function(e){ listState.query = e.target.value; renderPlayerList(); });
+    document.getElementById('toggleGroup').addEventListener('click', function(){
+      listState.grouped = !listState.grouped;
+      document.getElementById('toggleLabel').textContent = listState.grouped ? 'Voir tout' : 'Grouper par équipe';
+      renderPlayerList();
+    });
+    document.getElementById('openAdd').addEventListener('click', function(){ openAddModal('joueur'); });
+    [['sortName','name'],['sortStatus','status'],['sortCotis','cotis']].forEach(function(pair){
+      document.getElementById(pair[0]).addEventListener('click', function(){
+        if(listState.sortKey === pair[1]){ listState.sortDir = listState.sortDir === 'asc' ? 'desc' : 'asc'; }
+        else { listState.sortKey = pair[1]; listState.sortDir = 'asc'; }
+        renderPlayerList();
+      });
+    });
+    renderPlayerList();
+
+  } else {
+    const actifs = staff.filter(function(s){ return s.status === 'actif'; }).length;
+    mount.innerHTML =
+      '<div class="stats">' +
+        '<div class="stat"><div class="stat-icon ink"><i class="fa-solid fa-user-tie" aria-hidden="true"></i></div><div><div class="stat-label">Staff</div><div class="stat-value">' + staff.length + '</div></div></div>' +
+        '<div class="stat"><div class="stat-icon green"><i class="fa-solid fa-check" aria-hidden="true"></i></div><div><div class="stat-label">Actifs</div><div class="stat-value">' + actifs + '</div></div></div>' +
+        '<div class="stat"><div class="stat-icon rust"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></div><div><div class="stat-label">Inactifs</div><div class="stat-value">' + (staff.length - actifs) + '</div></div></div>' +
+        '<div class="stat"><div class="stat-icon amber"><i class="fa-solid fa-briefcase" aria-hidden="true"></i></div><div><div class="stat-label">Fonctions</div><div class="stat-value">' + new Set(staff.map(function(s){ return s.role; })).size + '</div></div></div>' +
+      '</div>' +
+      '<div class="filters">' +
+        segHtml() +
+        '<div class="pill-select"><i class="fa-solid fa-people-group" aria-hidden="true"></i><select id="teamFilter">' + staffTeams.map(function(t){ return '<option value="' + t + '">' + (t === 'Toutes équipes' ? 'Toutes les équipes' : t) + '</option>'; }).join('') + '</select></div>' +
+        '<div class="pill-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="staffSearch" placeholder="Rechercher un membre du staff" /><span class="kbd">⌘K</span></div>' +
+        '<button class="btn-pill solid" id="openAddStaff"><i class="fa-solid fa-plus" aria-hidden="true"></i>Ajouter un membre du staff</button>' +
+      '</div>' +
+      '<div class="col-head">' +
+        '<span class="c-player"></span>' +
+        '<span class="c-name" id="sortStaffName">Membre <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span>' +
+        '<span class="c-email"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</span>' +
+        '<span class="c-phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> Téléphone</span>' +
+        '<span class="c-status" id="sortStaffRole">Fonction <i class="fa-solid fa-arrow-up" style="visibility:hidden" aria-hidden="true"></i></span>' +
+        '<span class="c-cotis" id="sortStaffStatus">Statut <i class="fa-solid fa-arrow-up" style="visibility:hidden" aria-hidden="true"></i></span>' +
+        '<span class="c-chev"></span>' +
+      '</div>' +
+      '<div id="staffListMount"></div>';
+
+    document.getElementById('teamFilter').addEventListener('change', function(e){ staffListState.team = e.target.value; renderStaffList(); });
+    document.getElementById('staffSearch').addEventListener('input', function(e){ staffListState.query = e.target.value; renderStaffList(); });
+    document.getElementById('openAddStaff').addEventListener('click', function(){ openAddModal('staff'); });
+    [['sortStaffName','name'],['sortStaffRole','role'],['sortStaffStatus','status']].forEach(function(pair){
+      document.getElementById(pair[0]).addEventListener('click', function(){
+        if(staffListState.sortKey === pair[1]){ staffListState.sortDir = staffListState.sortDir === 'asc' ? 'desc' : 'asc'; }
+        else { staffListState.sortKey = pair[1]; staffListState.sortDir = 'asc'; }
+        renderStaffList();
+      });
+    });
+    renderStaffList();
+  }
+
+  document.querySelectorAll('.seg button').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchRosterMode(btn.dataset.mode); });
+  });
+}
+
+const staffAvatarPalette = [
+  {bg:'#e0f2ee', text:'#127a63'},
+  {bg:'#e4e9fb', text:'#3d4ea3'},
+  {bg:'#f2e6fb', text:'#7a3ba3'},
+  {bg:'#fdf1da', text:'#8a5a06'}
+];
+function staffInitials(name){
+  const parts = name.split(' ');
+  return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+}
+function sortStaff(arr){
+  const dir = staffListState.sortDir === 'asc' ? 1 : -1;
+  return [...arr].sort(function(a,b){
+    const av = a[staffListState.sortKey], bv = b[staffListState.sortKey];
+    if(av < bv) return -1 * dir;
+    if(av > bv) return 1 * dir;
+    return 0;
+  });
+}
+function staffRowHtml(s, index){
+  const pal = staffAvatarPalette[index % staffAvatarPalette.length];
+  const activeStatus = s.status === 'actif';
+  return '<div class="row" data-index="' + index + '">' +
+    '<input type="checkbox" onclick="event.stopPropagation()" />' +
+    '<div class="kit" style="background:' + pal.bg + '; color:' + pal.text + ';">' + staffInitials(s.name) + '</div>' +
+    '<div class="name-col"><div class="player-name">' + s.name + '</div><div class="player-num">' + s.team + '</div></div>' +
+    '<div class="email-col">' + s.email + '</div>' +
+    '<div class="phone-col">' + s.phone + '</div>' +
+    '<div class="status-col">' + s.role + '</div>' +
+    '<div class="cotis-col" style="width:auto;"><span class="dot ' + (activeStatus ? 'green' : 'rust') + '"></span>' + (activeStatus ? 'Actif' : 'Inactif') + '</div>' +
+    '<div class="chev"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></div>' +
+  '</div>';
+}
+function renderStaffList(){
+  let filtered = staff.filter(function(s){ return s.name.toLowerCase().includes(staffListState.query.toLowerCase()); });
+  if(staffListState.team !== 'all' && staffListState.team !== 'Toutes équipes'){
+    filtered = filtered.filter(function(s){ return s.team === staffListState.team || s.team === 'Toutes équipes'; });
+  }
+  const list = sortStaff(filtered);
+  const mount = document.getElementById('staffListMount');
+  mount.innerHTML = '<div class="list">' + list.map(function(s){ return staffRowHtml(s, staff.indexOf(s)); }).join('') + '</div>' || '';
+  if(list.length === 0){ mount.innerHTML = '<div class="empty-view"><i class="fa-solid fa-user-tie" aria-hidden="true"></i>Aucun membre du staff ne correspond à ces filtres.</div>'; }
+
+  const iconMap = {name:'sortStaffName', role:'sortStaffRole', status:'sortStaffStatus'};
+  ['name','role','status'].forEach(function(key){
+    const el = document.getElementById(iconMap[key]);
+    const icon = el.querySelector('i');
+    if(staffListState.sortKey === key){ icon.style.visibility = 'visible'; icon.className = staffListState.sortDir === 'asc' ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-down'; }
+    else { icon.style.visibility = 'hidden'; }
+  });
+
+  mount.querySelectorAll('.row').forEach(function(row){
+    row.addEventListener('click', function(){ openStaffDrawer(staff[parseInt(row.dataset.index)]); });
+  });
+}
+function openStaffDrawer(s){
+  const pal = staffAvatarPalette[staff.indexOf(s) % staffAvatarPalette.length];
+  const activeStatus = s.status === 'actif';
+  document.getElementById('drawer').innerHTML =
+    '<div class="drawer-head"><div></div><button class="drawer-close" id="closeDrawer"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="drawer-kit" style="background:' + pal.bg + '; color:' + pal.text + ';">' + staffInitials(s.name) + '</div>' +
+    '<div class="drawer-name">' + s.name + '</div>' +
+    '<span class="drawer-tag" style="background:' + (activeStatus ? 'var(--green-tint)' : 'var(--rust-tint)') + '; color:' + (activeStatus ? 'var(--green-text)' : 'var(--rust-text)') + ';">' + (activeStatus ? 'Actif' : 'Inactif') + '</span>' +
+    '<div class="drawer-section"><h4>Contact</h4>' +
+      '<div class="drawer-row"><span class="label"><i class="fa-solid fa-envelope" aria-hidden="true"></i>Email</span><span class="value">' + s.email + '</span></div>' +
+      '<div class="drawer-row"><span class="label"><i class="fa-solid fa-phone" aria-hidden="true"></i>Téléphone</span><span class="value">' + s.phone + '</span></div>' +
+    '</div>' +
+    '<div class="drawer-section"><h4>Fonction</h4>' +
+      '<div class="drawer-row"><span class="label">Rôle</span><span class="value">' + s.role + '</span></div>' +
+      '<div class="drawer-row"><span class="label">Équipe assignée</span><span class="value">' + s.team + '</span></div>' +
+    '</div>';
+  document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+  document.getElementById('drawerOverlay').classList.add('show');
+}
+
+function sortPlayers(arr){
+  const dir = listState.sortDir === 'asc' ? 1 : -1;
+  return [...arr].sort(function(a,b){
+    let av, bv;
+    if(listState.sortKey === 'name'){ av = a.name; bv = b.name; }
+    else if(listState.sortKey === 'status'){ av = statusMap[a.status].label; bv = statusMap[b.status].label; }
+    else { av = a.cotis; bv = b.cotis; }
+    if(av < bv) return -1 * dir;
+    if(av > bv) return 1 * dir;
+    return 0;
+  });
+}
+
+function rowHtml(p, index){
+  const s = statusMap[p.status];
+  const c = cotisTint(p.cotis);
+  return '<div class="row" data-index="' + index + '">' +
+    '<input type="checkbox" onclick="event.stopPropagation()" />' +
+    '<div class="kit ' + catClass[p.category] + '">' + catInitial(p.category) + '</div>' +
+    '<div class="name-col"><div class="player-name">' + p.name + '</div><div class="player-num">#' + p.number + ' · ' + p.category + '</div></div>' +
+    '<div class="email-col">' + p.email + '</div>' +
+    '<div class="phone-col">' + p.phone + '</div>' +
+    '<div class="status-col"><span class="dot ' + s.dot + '"></span>' + s.label + '</div>' +
+    '<div class="cotis-col"><div class="gauge"><div class="gauge-fill" style="width:' + p.cotis + '%; background:' + c.fill + ';"></div></div><div class="cotis-value" style="color:' + c.text + ';">' + p.cotis + '%</div></div>' +
+    '<div class="chev"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></div>' +
+  '</div>';
+}
+
+function groupHeadHtml(cat, list){
+  const ok = list.filter(function(p){ return p.cotis >= 80; }).length;
+  const late = list.filter(function(p){ return p.cotis === 0; }).length;
+  const mid = list.length - ok - late;
+  return '<div class="group-head"><div><span class="name">' + cat + '</span> <span class="count">' + list.length + ' joueuses</span></div><div class="breakdown">' + ok + ' à jour · ' + mid + ' échelonnées · ' + late + ' impayées</div></div>';
+}
+
+function renderPlayerList(){
+  let filtered = players.filter(function(p){ return p.name.toLowerCase().includes(listState.query.toLowerCase()); });
+  if(listState.category !== 'all'){ filtered = filtered.filter(function(p){ return p.category === listState.category; }); }
+
+  const ok = filtered.filter(function(p){ return p.cotis >= 80; }).length;
+  const late = filtered.filter(function(p){ return p.cotis === 0; }).length;
+  const mid = filtered.length - ok - late;
+  document.getElementById('statTotal').textContent = filtered.length;
+  document.getElementById('statOk').textContent = ok;
+  document.getElementById('statMid').textContent = mid;
+  document.getElementById('statLate').textContent = late;
+
+  const mount = document.getElementById('playerListMount');
+  let html = '';
+  if(listState.grouped && listState.category === 'all'){
+    ['Seniors F','U17','U15'].filter(function(c){ return filtered.some(function(p){ return p.category === c; }); }).forEach(function(cat){
+      const list = sortPlayers(filtered.filter(function(p){ return p.category === cat; }));
+      html += groupHeadHtml(cat, list);
+      html += '<div class="list">' + list.map(function(p){ return rowHtml(p, players.indexOf(p)); }).join('') + '</div>';
+    });
+  } else {
+    const list = sortPlayers(filtered);
+    html += '<div class="list">' + list.map(function(p){ return rowHtml(p, players.indexOf(p)); }).join('') + '</div>';
+  }
+  mount.innerHTML = html || '<div class="empty-view"><i class="fa-solid fa-users" aria-hidden="true"></i>Aucun joueur ne correspond à ces filtres.</div>';
+
+  const icons = {name:'sortName', status:'sortStatus', cotis:'sortCotis'};
+  ['name','status','cotis'].forEach(function(key){
+    const el = document.getElementById(icons[key]);
+    const icon = el.querySelector('i');
+    if(listState.sortKey === key){ icon.style.visibility = 'visible'; icon.className = listState.sortDir === 'asc' ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-down'; }
+    else { icon.style.visibility = 'hidden'; }
+  });
+
+  mount.querySelectorAll('.row').forEach(function(row){
+    row.addEventListener('click', function(){ openDrawer(players[parseInt(row.dataset.index)]); });
+  });
+}
+
+function openDrawer(p){
+  const s = statusMap[p.status];
+  const c = cotisTint(p.cotis);
+  document.getElementById('drawer').innerHTML =
+    '<div class="drawer-head"><div></div><button class="drawer-close" id="closeDrawer"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="drawer-kit ' + catClass[p.category] + '">' + catInitial(p.category) + '</div>' +
+    '<div class="drawer-name">' + p.name + '</div>' +
+    '<span class="drawer-tag" style="background:var(--' + s.dot + '-tint); color:var(--' + s.dot + '-text);">' + s.label + '</span>' +
+    '<div class="drawer-section"><h4>Contact</h4>' +
+      '<div class="drawer-row"><span class="label"><i class="fa-solid fa-envelope" aria-hidden="true"></i>Email</span><span class="value">' + p.email + '</span></div>' +
+      '<div class="drawer-row"><span class="label"><i class="fa-solid fa-phone" aria-hidden="true"></i>Téléphone</span><span class="value">' + p.phone + '</span></div>' +
+      '<div class="drawer-row"><span class="label"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Adresse</span><span class="value" style="text-align:right; max-width:220px;">' + p.address + '</span></div>' +
+    '</div>' +
+    '<div class="drawer-section"><h4>Club</h4>' +
+      '<div class="drawer-row"><span class="label">Catégorie</span><span class="value">' + p.category + '</span></div>' +
+      '<div class="drawer-row"><span class="label">Numéro de licence</span><span class="value">' + p.licence + '</span></div>' +
+      '<div class="drawer-row"><span class="label">Date de naissance</span><span class="value">' + p.birth + '</span></div>' +
+      '<div class="drawer-row"><span class="label">N° de maillot</span><span class="value">#' + p.number + '</span></div>' +
+    '</div>' +
+    '<div class="drawer-section"><h4>Cotisation</h4>' +
+      '<div class="gauge" style="margin-bottom:8px;"><div class="gauge-fill" style="width:' + p.cotis + '%; background:' + c.fill + ';"></div></div>' +
+      '<div class="drawer-row"><span class="label">Payé</span><span class="value" style="color:' + c.text + ';">' + p.cotis + '%</span></div>' +
+      '<div class="echeance"><span>Tranche 1 - Sept.</span><span class="paid">Payée</span></div>' +
+      '<div class="echeance"><span>Tranche 2 - Déc.</span><span class="' + (p.cotis >= 66 ? 'paid' : '') + '">' + (p.cotis >= 66 ? 'Payée' : 'En attente') + '</span></div>' +
+      '<div class="echeance"><span>Tranche 3 - Mars</span><span class="' + (p.cotis >= 100 ? 'paid' : '') + '">' + (p.cotis >= 100 ? 'Payée' : 'En attente') + '</span></div>' +
+    '</div>';
+  document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+  document.getElementById('drawerOverlay').classList.add('show');
+}
+function closeDrawer(){ document.getElementById('drawerOverlay').classList.remove('show'); }
+document.getElementById('drawerOverlay').addEventListener('click', function(e){ if(e.target.id === 'drawerOverlay') closeDrawer(); });
+
+function openAddModal(initialType){
+  let addType = initialType || 'joueur';
+  renderAddModalFields(addType);
+
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+  document.getElementById('typeJoueur').addEventListener('click', function(){ addType = 'joueur'; renderAddModalFields(addType); wireAddModalActions(addType); });
+  document.getElementById('typeStaff').addEventListener('click', function(){ addType = 'staff'; renderAddModalFields(addType); wireAddModalActions(addType); });
+  wireAddModalActions(addType);
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function renderAddModalFields(addType){
+  const isStaff = addType === 'staff';
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-head"><h3>Ajouter un affilié</h3><button class="drawer-close" id="closeModal"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="seg" style="margin-bottom:16px;"><button class="' + (!isStaff ? 'active' : '') + '" id="typeJoueur">Joueur</button><button class="' + (isStaff ? 'active' : '') + '" id="typeStaff">Staff</button></div>' +
+    '<div class="field-row"><div class="field"><label>Prénom</label><input id="fPrenom" placeholder="Chloé" /></div><div class="field"><label>Nom</label><input id="fNom" placeholder="Dubois" /></div></div>' +
+    (isStaff ?
+      ('<div class="field"><label>Fonction</label><select id="fRole">' + staffRoles.map(function(r){ return '<option>' + r + '</option>'; }).join('') + '</select></div>' +
+       '<div class="field"><label>Équipe assignée</label><select id="fTeam">' + staffTeams.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select></div>')
+      :
+      ('<div class="field-row">' +
+        '<div class="field"><label>Catégorie</label><select id="fCat"><option>Seniors F</option><option>U17</option><option>U15</option></select></div>' +
+        '<div class="field"><label>N° de maillot</label><input id="fNum" type="number" placeholder="10" /></div>' +
+      '</div>' +
+      '<div class="field"><label>Statut</label><select id="fStatus"><option value="affilie">Affilié</option><option value="pret_entrant">Prêt entrant</option><option value="pret_sortant">Prêt sortant</option></select></div>')
+    ) +
+    '<div class="field-row"><div class="field"><label>Email</label><input id="fEmail" placeholder="prenom.nom@mail.com" /></div><div class="field"><label>Téléphone</label><input id="fPhone" placeholder="0470 00 00 00" /></div></div>' +
+    (isStaff ? '' : '<div class="field"><label>Adresse</label><input id="fAddr" placeholder="Rue, numéro, localité" /></div>') +
+    '<div class="modal-actions"><button class="btn-ghost" id="cancelModal">Annuler</button><button class="btn-solid" id="saveModal">Ajouter</button></div>';
+}
+
+function wireAddModalActions(addType){
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+  document.getElementById('saveModal').addEventListener('click', function(){
+    const prenom = document.getElementById('fPrenom').value.trim();
+    const nom = document.getElementById('fNom').value.trim();
+    if(!prenom || !nom){ return; }
+
+    if(addType === 'staff'){
+      staff.push({
+        name: prenom + ' ' + nom,
+        role: document.getElementById('fRole').value,
+        team: document.getElementById('fTeam').value,
+        email: document.getElementById('fEmail').value || '—',
+        phone: document.getElementById('fPhone').value || '—',
+        status: 'actif'
+      });
+      closeModal();
+      rosterMode = 'staff';
+      renderRosterBody();
+      showToast('Membre du staff ajouté');
+    } else {
+      players.push({
+        name: prenom + ' ' + nom,
+        number: parseInt(document.getElementById('fNum').value) || 0,
+        category: document.getElementById('fCat').value,
+        status: document.getElementById('fStatus').value,
+        cotis: 0,
+        email: document.getElementById('fEmail').value || '—',
+        phone: document.getElementById('fPhone').value || '—',
+        address: document.getElementById('fAddr').value || '—',
+        birth: '—',
+        licence: '—'
+      });
+      closeModal();
+      rosterMode = 'joueurs';
+      renderRosterBody();
+      showToast('Affilié ajouté');
+    }
+  });
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').addEventListener('click', function(e){ if(e.target.id === 'modalOverlay') closeModal(); });
+
+function openAddSessionModal(){
+  const terrainNames = terrains.map(function(t){ return t.split(' - ')[0]; });
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-head"><h3>Ajouter une séance</h3><button class="drawer-close" id="closeSessionModal"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="field"><label>Catégorie</label><select id="sCat"><option>Seniors F</option><option>U17</option><option>U15</option></select></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Jour</label><select id="sDay">' + dayOrder.map(function(d){ return '<option>' + d + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label>Terrain</label><select id="sField">' + terrainNames.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Heure de début</label><input id="sStart" type="time" value="18:00" /></div>' +
+      '<div class="field"><label>Heure de fin</label><input id="sEnd" type="time" value="19:30" /></div>' +
+    '</div>' +
+    '<div class="modal-actions"><button class="btn-ghost" id="cancelSessionModal">Annuler</button><button class="btn-solid" id="saveSessionModal">Ajouter</button></div>';
+
+  document.getElementById('closeSessionModal').addEventListener('click', closeModal);
+  document.getElementById('cancelSessionModal').addEventListener('click', closeModal);
+  document.getElementById('saveSessionModal').addEventListener('click', function(){
+    const cat = document.getElementById('sCat').value;
+    if(!sessionsByMonth[currentMonth]){ sessionsByMonth[currentMonth] = []; }
+    sessionsByMonth[currentMonth].push({
+      day: document.getElementById('sDay').value,
+      time: document.getElementById('sStart').value + ' - ' + document.getElementById('sEnd').value,
+      team: cat,
+      category: cat,
+      field: document.getElementById('sField').value
+    });
+    closeModal();
+    renderHoraireGrid();
+    showToast('Séance ajoutée');
+  });
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function renderClub(){
+  document.getElementById('content').innerHTML =
+    '<div class="club-card">' +
+      '<div class="club-logo-row"><div class="club-logo" id="clubLogo">RH</div><div><button class="btn-ghost">Changer le logo</button></div></div>' +
+      '<div class="field"><label>Nom du club</label><input id="clubName" value="Rus Hensies" /></div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>Matricule</label><input id="clubMatricule" value="8214" /></div>' +
+        '<div class="field"><label>Saison</label><input value="2025/26" disabled /></div>' +
+      '</div>' +
+      '<div class="field"><label>Adresse du siège social</label><textarea id="clubAddress">Rue du Stade 1, 7350 Hensies</textarea></div>' +
+      '<div class="field"><label>Terrains</label><div id="terrainList"></div><button class="add-terrain" id="addTerrain"><i class="fa-solid fa-plus" aria-hidden="true"></i> Ajouter un terrain</button></div>' +
+      '<div class="modal-actions" style="justify-content:flex-start; margin-top:22px;"><button class="btn-solid" id="saveClub">Enregistrer</button></div>' +
+    '</div>';
+  renderTerrains();
+  document.getElementById('addTerrain').addEventListener('click', function(){ terrains.push(''); renderTerrains(); });
+  document.getElementById('saveClub').addEventListener('click', function(){ showToast('Modifications enregistrées'); });
+}
+
+function renderTerrains(){
+  const mount = document.getElementById('terrainList');
+  mount.innerHTML = terrains.map(function(t, i){
+    return '<div class="terrain-row"><input value="' + t + '" data-i="' + i + '" class="terrainInput" placeholder="Nom du terrain, adresse" /><button class="icon-x" data-i="' + i + '"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>';
+  }).join('');
+  mount.querySelectorAll('.terrainInput').forEach(function(inp){
+    inp.addEventListener('input', function(e){ terrains[parseInt(e.target.dataset.i)] = e.target.value; });
+  });
+  mount.querySelectorAll('.icon-x').forEach(function(btn){
+    btn.addEventListener('click', function(){ terrains.splice(parseInt(btn.dataset.i), 1); renderTerrains(); });
+  });
+}
+
+function renderHoraire(){
+  const content = document.getElementById('content');
+  content.innerHTML =
+    '<div class="filters">' +
+      '<div class="month-nav"><button class="month-arrow" id="prevMonth"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><div class="month-label" id="monthLabel"></div><button class="month-arrow" id="nextMonth"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div>' +
+      '<div class="chip active" data-cat="all">Toutes</div>' +
+      '<div class="chip" data-cat="Seniors F">Seniors F</div>' +
+      '<div class="chip" data-cat="U17">U17</div>' +
+      '<div class="chip" data-cat="U15">U15</div>' +
+      '<button class="btn-pill solid" id="openAddSession"><i class="fa-solid fa-plus" aria-hidden="true"></i>Ajouter une séance</button>' +
+    '</div>' +
+    '<div class="legend">' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--cat-seniors-text);"></span>Seniors F</div>' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--cat-u17-text);"></span>U17</div>' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--cat-u15-text);"></span>U15</div>' +
+    '</div>' +
+    '<div class="planning-wrap"><div class="planning-grid" id="planningGrid"></div></div>';
+
+  document.getElementById('openAddSession').addEventListener('click', openAddSessionModal);
+  document.getElementById('prevMonth').addEventListener('click', function(){ shiftMonth(-1); });
+  document.getElementById('nextMonth').addEventListener('click', function(){ shiftMonth(1); });
+  content.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      content.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('active'); });
+      c.classList.add('active');
+      horaireCategory = c.dataset.cat;
+      renderHoraireGrid();
+    });
+  });
+
+  renderHoraireGrid();
+}
+
+function shiftMonth(dir){
+  const months = Object.keys(sessionsByMonth);
+  let idx = months.indexOf(currentMonth);
+  idx = (idx + dir + months.length) % months.length;
+  currentMonth = months[idx];
+  renderHoraireGrid();
+}
+
+function renderHoraireGrid(){
+  document.getElementById('monthLabel').textContent = currentMonth;
+  const terrainNames = terrains.map(function(t){ return t.split(' - ')[0]; });
+  const monthSessions = (sessionsByMonth[currentMonth] || []).filter(function(s){ return horaireCategory === 'all' || s.category === horaireCategory; });
+
+  let grid = '<div class="planning-head"></div>';
+  dayOrder.forEach(function(d){ grid += '<div class="planning-head">' + d + '</div>'; });
+
+  terrainNames.forEach(function(tname){
+    grid += '<div class="planning-terrain">' + tname + '</div>';
+    dayOrder.forEach(function(day){
+      const list = monthSessions.filter(function(s){ return s.field === tname && s.day === day; });
+      grid += '<div class="planning-cell">' + list.map(function(s){
+        const cc = catClass[s.category];
+        const bg = cc === 'seniors' ? 'var(--cat-seniors-bg)' : cc === 'u17' ? 'var(--cat-u17-bg)' : 'var(--cat-u15-bg)';
+        const tx = cc === 'seniors' ? 'var(--cat-seniors-text)' : cc === 'u17' ? 'var(--cat-u17-text)' : 'var(--cat-u15-text)';
+        return '<div class="plan-tile" style="background:' + bg + '; color:' + tx + ';"><div class="t-time">' + s.time + '</div><div class="t-team">' + s.team + '</div></div>';
+      }).join('') + '</div>';
+    });
+  });
+
+  document.getElementById('planningGrid').innerHTML = grid;
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+renderView('dashboard');
+</script>
+
+</body>
+</html>
