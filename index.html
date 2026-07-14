@@ -96,7 +96,7 @@
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;}
   .stat{background:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.7); box-shadow:0 8px 20px -14px rgba(20,30,20,0.25); border-radius:20px; padding:14px 16px; display:flex; align-items:center; gap:12px;}
   .stat-icon{width:38px; height:38px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
-  .stat-icon.ink{background:var(--green-tint); color:var(--brand-green-deep);}
+  .stat-icon.ink{background:var(--side-dark-a); color:#fff;}
   .stat-icon.green{background:var(--green-tint); color:var(--green-text);}
   .stat-icon.amber{background:var(--amber-tint); color:var(--amber-text);}
   .stat-icon.rust{background:var(--rust-tint); color:var(--rust-text);}
@@ -161,9 +161,9 @@
   .doc-status.warn{background:var(--amber-tint); color:var(--amber-text);}
 
   .quicklinks{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:26px;}
-  .quick-pill{display:flex; align-items:center; gap:8px; border:1px solid var(--line-strong); background:#fff; border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:600; color:var(--ink); cursor:pointer;}
-  .quick-pill i{font-size:14px; color:var(--brand-green-deep);}
-  .quick-pill:hover{border-color:#c7ccc6;}
+  .quick-pill{display:flex; align-items:center; gap:8px; border:none; background:var(--side-dark-a); border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:600; color:#fff; cursor:pointer;}
+  .quick-pill i{font-size:14px; color:var(--brand-green);}
+  .quick-pill:hover{background:var(--side-dark-b);}
 
   /* ---------- pill filters ---------- */
   .filters{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
@@ -182,9 +182,9 @@
   .btn-pill.solid:hover{filter:brightness(0.96);}
   .seg{display:flex; background:#f7f7f6; border:1px solid var(--line-strong); border-radius:999px; padding:3px;}
   .seg button{border:none; background:transparent; font-family:'Geist'; font-size:12.5px; font-weight:600; padding:7px 16px; border-radius:999px; cursor:pointer; color:var(--text-soft);}
-  .seg button.active{background:var(--side-dark-a); color:#fff;}
+  .seg button.active{background:var(--brand-green); color:var(--side-dark-b);}
   .chip{border:1px solid var(--line-strong); background:#f7f7f6; border-radius:999px; padding:7px 14px; font-size:12px; color:var(--text-soft); cursor:pointer;}
-  .chip.active{background:var(--side-dark-a); color:#fff; border-color:var(--side-dark-a);}
+  .chip.active{background:var(--brand-green); color:var(--side-dark-b); border-color:var(--brand-green); font-weight:700;}
 
   /* ---------- column head ---------- */
   .col-head{display:flex; align-items:center; padding:0 18px 8px; gap:14px; font-size:11px; letter-spacing:.03em; text-transform:uppercase; color:var(--text-faint); font-weight:600;}
@@ -324,6 +324,14 @@
     <div id="signupFields" style="display:none;">
       <div class="field"><label>Nom du club</label><input id="suClub" placeholder="Rus Hensies" /></div>
       <div class="field"><label>Votre nom</label><input id="suName" placeholder="Josiah S." /></div>
+      <div class="field">
+        <label>Logo du club (facultatif)</label>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div id="suLogoPreview" style="width:44px; height:44px; border-radius:14px; background:var(--side-dark-a); color:var(--brand-green); display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0;">?</div>
+          <button type="button" class="btn-ghost" id="suLogoBtn" style="height:36px;">Choisir une image</button>
+          <input type="file" accept="image/*" id="suLogoFile" style="display:none;" />
+        </div>
+      </div>
     </div>
     <div class="field"><label>Adresse email</label><input id="loginEmail" type="email" placeholder="vous@club.be" /></div>
     <div class="field"><label>Mot de passe</label><input id="loginPass" type="password" placeholder="••••••••" /></div>
@@ -483,7 +491,77 @@ function renderView(view){
   else if(view === 'club'){ renderClub(); }
   else if(view === 'horaire'){ renderHoraire(); }
   else if(view === 'documents'){ renderDocumentsView(); }
+  else if(view === 'parametres'){ renderParametresView(); }
   else { content.innerHTML = '<div class="empty-view"><i class="fa-solid fa-hammer" aria-hidden="true"></i>Bientôt disponible</div>'; }
+}
+
+const accentPresets = [
+  {name:'Vert Onze+', value:'#65eb8b'},
+  {name:'Bleu ciel', value:'#6ec3ff'},
+  {name:'Violet', value:'#b78cff'},
+  {name:'Corail', value:'#ff9d7a'}
+];
+
+function renderParametresView(){
+  const content = document.getElementById('content');
+  content.innerHTML =
+    '<div class="club-card" style="margin-bottom:16px;">' +
+      '<div class="tile-head" style="margin-bottom:16px;"><h3>Identité du club</h3></div>' +
+      '<div class="club-logo-row"><div class="club-logo" id="paramLogo">' + (currentClub.logo_url ? '' : 'RH') + '</div><div><button class="btn-ghost" id="paramLogoBtn">Changer le logo</button><input type="file" accept="image/*" id="paramLogoFile" style="display:none;" /></div></div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>Nom du club</label><input id="paramClubName" value="' + currentClub.name + '" /></div>' +
+        '<div class="field"><label>Nom du représentant</label><input id="paramRepName" value="' + currentClub.representative + '" /></div>' +
+      '</div>' +
+      '<div class="modal-actions" style="justify-content:flex-start; margin-top:14px;"><button class="btn-solid" id="paramSaveIdentity">Enregistrer</button></div>' +
+    '</div>' +
+
+    '<div class="club-card">' +
+      '<div class="tile-head" style="margin-bottom:16px;"><h3>Apparence de l\'interface</h3></div>' +
+      '<div style="font-size:12px; color:var(--text-soft); margin-bottom:12px;">Choisis la couleur d\'accent utilisée dans toute l\'application.</div>' +
+      '<div style="display:flex; gap:12px;" id="accentSwatches">' +
+        accentPresets.map(function(a){
+          return '<div class="accent-swatch" data-color="' + a.value + '" title="' + a.name + '" style="width:38px; height:38px; border-radius:50%; background:' + a.value + '; cursor:pointer; border:3px solid ' + (a.value === getComputedStyle(document.documentElement).getPropertyValue('--brand-green').trim() ? 'var(--ink)' : 'transparent') + ';"></div>';
+        }).join('') +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('paramLogoBtn').addEventListener('click', function(){ document.getElementById('paramLogoFile').click(); });
+  document.getElementById('paramLogoFile').addEventListener('change', async function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const path = currentClub.id + '/logo_' + Date.now() + '_' + file.name;
+    const {error: upErr} = await sb.storage.from('logos').upload(path, file, {upsert:true});
+    if(upErr){ showToast('Erreur upload : ' + upErr.message); return; }
+    const {data:{publicUrl}} = sb.storage.from('logos').getPublicUrl(path);
+    await sb.from('clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
+    currentClub.logo_url = publicUrl;
+    document.getElementById('paramLogo').setAttribute('style', 'background-image:url(' + publicUrl + '); background-size:cover; background-position:center;');
+    document.getElementById('paramLogo').textContent = '';
+    document.getElementById('pillClubIcon').innerHTML = '<img src="' + publicUrl + '" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />';
+    showToast('Logo mis à jour');
+  });
+
+  document.getElementById('paramSaveIdentity').addEventListener('click', async function(){
+    const updates = {
+      name: document.getElementById('paramClubName').value.trim() || currentClub.name,
+      representative: document.getElementById('paramRepName').value.trim() || currentClub.representative
+    };
+    const {error} = await sb.from('clubs').update(updates).eq('id', currentClub.id);
+    if(error){ showToast('Erreur : ' + error.message); return; }
+    Object.assign(currentClub, updates);
+    document.getElementById('pillClubName').textContent = currentClub.name;
+    document.getElementById('pillUserName').textContent = currentClub.representative;
+    showToast('Identité mise à jour');
+  });
+
+  document.querySelectorAll('.accent-swatch').forEach(function(sw){
+    sw.addEventListener('click', function(){
+      document.documentElement.style.setProperty('--brand-green', sw.dataset.color);
+      document.querySelectorAll('.accent-swatch').forEach(function(x){ x.style.borderColor = 'transparent'; });
+      sw.style.borderColor = 'var(--ink)';
+      showToast('Couleur d\'accent mise à jour');
+    });
+  });
 }
 
 function renderDocumentsView(){
@@ -518,10 +596,16 @@ function renderDocumentGrid(){
 }
 
 function triggerDocUpload(i){ document.getElementById('docFile' + i).click(); }
-function handleDocUpload(i, input){
+async function handleDocUpload(i, input){
   const file = input.files[0];
   if(!file) return;
-  documents[i].fileUrl = URL.createObjectURL(file);
+  const path = currentClub.id + '/' + Date.now() + '_' + file.name;
+  const {error: upErr} = await sb.storage.from('documents').upload(path, file, {upsert:true});
+  if(upErr){ showToast('Erreur upload : ' + upErr.message); return; }
+  const {data:{publicUrl}} = sb.storage.from('documents').getPublicUrl(path);
+  const {error} = await sb.from('documents').update({file_url: publicUrl, file_name: file.name}).eq('id', documents[i].id);
+  if(error){ showToast('Erreur : ' + error.message); return; }
+  documents[i].fileUrl = publicUrl;
   documents[i].fileName = file.name;
   renderDocumentGrid();
   showToast('Document mis à jour');
@@ -534,10 +618,13 @@ function openAddDocumentModal(){
     '<div class="modal-actions"><button class="btn-ghost" id="cancelDocModal">Annuler</button><button class="btn-solid" id="saveDocModal">Ajouter</button></div>';
   document.getElementById('closeDocModal').addEventListener('click', closeModal);
   document.getElementById('cancelDocModal').addEventListener('click', closeModal);
-  document.getElementById('saveDocModal').addEventListener('click', function(){
+  document.getElementById('saveDocModal').addEventListener('click', async function(){
     const name = document.getElementById('newDocName').value.trim();
     if(!name) return;
-    documents.push({name:name, icon:'fa-file-lines', status:'ok', date:'À jour', bg:'#f1f1ef', color:'#5a5f58', fileUrl:null, fileName:null});
+    const row = {club_id: currentClub.id, name:name, icon:'fa-file-lines', status:'ok', date_info:'À jour', bg:'#f1f1ef', color:'#5a5f58'};
+    const {data, error} = await sb.from('documents').insert(row).select().single();
+    if(error){ showToast('Erreur : ' + error.message); return; }
+    documents.push({id:data.id, name:data.name, icon:data.icon, status:data.status, date:data.date_info, bg:data.bg, color:data.color, fileUrl:null, fileName:null});
     closeModal();
     renderDocumentGrid();
     showToast('Document ajouté');
@@ -623,15 +710,16 @@ function renderDashboard(){
   const content = document.getElementById('content');
   content.innerHTML =
 
-    '<div class="hero-black"><div class="hero-row">' +
-      '<div class="hero-col"><div class="hero-num" style="color:var(--vivid-green);">' + ok + '</div><div class="hero-label">À jour</div></div>' +
-      '<div class="hero-col"><div class="hero-num" style="color:var(--vivid-yellow);">' + mid + '</div><div class="hero-label">Échelonnées</div></div>' +
-      '<div class="hero-col"><div class="hero-num" style="color:var(--vivid-red);">' + late + '</div><div class="hero-label">Impayées</div></div>' +
-    '</div><div class="hero-sub">' + total + ' affiliés au total</div></div>' +
+    '<div class="info-chips">' +
+      '<div class="info-chip"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>' + (nextSession ? (nextSession.day + ' · ' + nextSession.time + ' · ' + nextSession.team) : 'Aucune séance planifiée') + '</div>' +
+      '<div class="info-chip muted"><i class="fa-solid fa-bell" aria-hidden="true"></i>' + (nextReminder ? nextReminder.label : 'Aucun rappel en attente') + '</div>' +
+    '</div>' +
 
-    '<div class="pair-row">' +
-      '<div class="info-card light"><div class="ic-circle"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i></div><div><div class="ic-label">Prochaine séance</div><div class="ic-value">' + (nextSession ? (nextSession.day + ' · ' + nextSession.time + ' · ' + nextSession.team) : 'Aucune planifiée') + '</div></div></div>' +
-      '<div class="info-card green"><div class="ic-circle"><i class="fa-solid fa-bell" aria-hidden="true"></i></div><div><div class="ic-label">Prochain rappel</div><div class="ic-value">' + (nextReminder ? nextReminder.label : 'Aucun rappel en attente') + '</div></div></div>' +
+    '<div class="stats">' +
+      '<div class="stat"><div class="stat-icon ink"><i class="fa-solid fa-users" aria-hidden="true"></i></div><div><div class="stat-label">Affiliés</div><div class="stat-value">' + total + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon green"><i class="fa-solid fa-check" aria-hidden="true"></i></div><div><div class="stat-label">À jour</div><div class="stat-value">' + ok + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon amber"><i class="fa-solid fa-clock" aria-hidden="true"></i></div><div><div class="stat-label">Échelonnées</div><div class="stat-value">' + mid + '</div></div></div>' +
+      '<div class="stat"><div class="stat-icon rust"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></div><div><div class="stat-label">Impayées</div><div class="stat-value">' + late + '</div></div></div>' +
     '</div>' +
 
     '<div class="bento-row row-a">' +
@@ -649,7 +737,7 @@ function renderDashboard(){
 
     '<div class="bento-row row-b">' +
       '<div class="tile"><div class="tile-head"><h3>Évolution sur 6 mois</h3></div>' + lineChart + '</div>' +
-      '<div class="tile"><div class="tile-head"><h3>Rappels</h3><i class="fa-solid fa-plus tile-link" aria-hidden="true"></i></div><div id="reminderMount"></div></div>' +
+      '<div class="tile"><div class="tile-head"><h3>Rappels</h3><i class="fa-solid fa-plus tile-link" id="addReminderBtn" aria-hidden="true"></i></div><div id="reminderMount"></div></div>' +
       '<div class="tile"><div class="tile-head"><h3>Documents</h3><span class="tile-link">Gérer</span></div>' +
         documents.map(function(d){
           return '<div class="doc-row"><div class="doc-icon" style="background:' + d.bg + '; color:' + d.color + ';"><i class="fa-solid ' + d.icon + '" aria-hidden="true"></i></div><div><div class="doc-name">' + d.name + '</div><div style="font-size:10.5px; color:var(--text-faint);">' + d.date + '</div></div><span class="doc-status ' + d.status + '">' + (d.status === 'ok' ? 'À jour' : 'À renouveler') + '</span></div>';
@@ -664,6 +752,7 @@ function renderDashboard(){
     '</div>';
 
   renderReminders();
+  document.getElementById('addReminderBtn').addEventListener('click', addReminder);
   content.querySelectorAll('.quick-pill').forEach(function(q){ q.addEventListener('click', function(){ goTo(q.dataset.go); }); });
 }
 
@@ -672,12 +761,24 @@ function renderReminders(){
     return '<div class="reminder-row ' + (r.done ? 'done' : '') + '"><span class="reminder-check" data-i="' + i + '"><i class="fa-solid fa-check" style="font-size:10px; visibility:' + (r.done ? 'visible' : 'hidden') + '" aria-hidden="true"></i></span><span class="reminder-label">' + r.label + '</span><span class="reminder-due">' + r.due + '</span></div>';
   }).join('');
   document.querySelectorAll('.reminder-check').forEach(function(el){
-    el.addEventListener('click', function(){
+    el.addEventListener('click', async function(){
       const i = parseInt(el.dataset.i);
       reminders[i].done = !reminders[i].done;
       renderReminders();
+      const {error} = await sb.from('reminders').update({done: reminders[i].done}).eq('id', reminders[i].id);
+      if(error){ showToast('Erreur : ' + error.message); }
     });
   });
+}
+
+async function addReminder(){
+  const label = window.prompt('Nouveau rappel :');
+  if(!label || !label.trim()) return;
+  const row = {club_id: currentClub.id, label: label.trim(), due: '—', done:false};
+  const {data, error} = await sb.from('reminders').insert(row).select().single();
+  if(error){ showToast('Erreur : ' + error.message); return; }
+  reminders.push({id:data.id, label:data.label, due:data.due, done:data.done});
+  renderReminders();
 }
 
 function renderJoueurs(){
@@ -1007,13 +1108,14 @@ function renderAddModalFields(addType){
 function wireAddModalActions(addType){
   document.getElementById('closeModal').addEventListener('click', closeModal);
   document.getElementById('cancelModal').addEventListener('click', closeModal);
-  document.getElementById('saveModal').addEventListener('click', function(){
+  document.getElementById('saveModal').addEventListener('click', async function(){
     const prenom = document.getElementById('fPrenom').value.trim();
     const nom = document.getElementById('fNom').value.trim();
     if(!prenom || !nom){ return; }
 
     if(addType === 'staff'){
-      staff.push({
+      const row = {
+        club_id: currentClub.id,
         name: prenom + ' ' + nom,
         role: document.getElementById('fRole').value,
         team: document.getElementById('fTeam').value,
@@ -1021,13 +1123,17 @@ function wireAddModalActions(addType){
         phone: document.getElementById('fPhone').value || '—',
         status: 'actif',
         diploma: document.getElementById('fDiploma').value.trim()
-      });
+      };
+      const {data, error} = await sb.from('staff').insert(row).select().single();
+      if(error){ showToast('Erreur : ' + error.message); return; }
+      staff.push({id:data.id, name:data.name, role:data.role, team:data.team, email:data.email, phone:data.phone, status:data.status, diploma:data.diploma});
       closeModal();
       rosterMode = 'staff';
       renderRosterBody();
       showToast('Membre du staff ajouté');
     } else {
-      players.push({
+      const row = {
+        club_id: currentClub.id,
         name: prenom + ' ' + nom,
         number: parseInt(document.getElementById('fNum').value) || 0,
         category: document.getElementById('fCat').value,
@@ -1038,7 +1144,10 @@ function wireAddModalActions(addType){
         address: document.getElementById('fAddr').value || '—',
         birth: '—',
         licence: '—'
-      });
+      };
+      const {data, error} = await sb.from('players').insert(row).select().single();
+      if(error){ showToast('Erreur : ' + error.message); return; }
+      players.push({id:data.id, name:data.name, number:data.number, category:data.category, status:data.status, cotis:data.cotis, email:data.email, phone:data.phone, address:data.address, birth:data.birth, licence:data.licence});
       closeModal();
       rosterMode = 'joueurs';
       renderRosterBody();
@@ -1247,27 +1356,90 @@ document.getElementById('tabSignup').addEventListener('click', function(){
   document.getElementById('tabLogin').classList.remove('active');
   document.getElementById('signupFields').style.display = 'block';
 });
-document.getElementById('loginSubmit').addEventListener('click', function(){
+
+let suLogoFileRef = null;
+document.getElementById('suLogoBtn').addEventListener('click', function(){ document.getElementById('suLogoFile').click(); });
+document.getElementById('suLogoFile').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  suLogoFileRef = file;
+  document.getElementById('suLogoPreview').setAttribute('style', 'width:44px;height:44px;border-radius:14px;background-image:url(' + URL.createObjectURL(file) + ');background-size:cover;background-position:center;flex-shrink:0;');
+  document.getElementById('suLogoPreview').textContent = '';
+});
+
+document.getElementById('loginSubmit').addEventListener('click', async function(){
   const isSignup = document.getElementById('tabSignup').classList.contains('active');
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value.trim();
+  const errEl = document.getElementById('loginError');
   if(!email || !pass || (isSignup && (!document.getElementById('suClub').value.trim() || !document.getElementById('suName').value.trim()))){
-    document.getElementById('loginError').style.display = 'block';
+    errEl.textContent = 'Merci de compléter les champs requis.';
+    errEl.style.display = 'block';
     return;
   }
-  document.getElementById('loginError').style.display = 'none';
+  errEl.style.display = 'none';
+  const submitBtn = document.getElementById('loginSubmit');
+  submitBtn.textContent = 'Un instant...';
+  submitBtn.disabled = true;
 
-  if(isSignup){
-    const clubName = document.getElementById('suClub').value.trim();
-    const repName = document.getElementById('suName').value.trim();
-    document.getElementById('pillClubName').textContent = clubName;
-    document.getElementById('pillUserName').textContent = repName;
-    document.getElementById('clubName') && (document.getElementById('clubName').value = clubName);
+  try{
+    if(isSignup){
+      const clubName = document.getElementById('suClub').value.trim();
+      const repName = document.getElementById('suName').value.trim();
+
+      const {data: authData, error: authErr} = await sb.auth.signUp({email, password: pass});
+      if(authErr) throw authErr;
+
+      if(!authData.session){
+        errEl.textContent = "Compte créé — vérifie ta boîte mail pour confirmer ton adresse, puis connecte-toi.";
+        errEl.style.color = 'var(--green-text)';
+        errEl.style.display = 'block';
+        document.getElementById('tabLogin').click();
+        return;
+      }
+      currentUser = authData.user;
+
+      const {data: club, error: clubErr} = await sb.from('clubs').insert({owner_id: currentUser.id, name: clubName, representative: repName}).select().single();
+      if(clubErr) throw clubErr;
+      currentClub = club;
+
+      if(suLogoFileRef){
+        const path = currentClub.id + '/logo_' + Date.now() + '_' + suLogoFileRef.name;
+        const {error: upErr} = await sb.storage.from('logos').upload(path, suLogoFileRef, {upsert:true});
+        if(!upErr){
+          const {data:{publicUrl}} = sb.storage.from('logos').getPublicUrl(path);
+          await sb.from('clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
+          currentClub.logo_url = publicUrl;
+        }
+      }
+    } else {
+      const {data: authData, error: authErr} = await sb.auth.signInWithPassword({email, password: pass});
+      if(authErr) throw authErr;
+      currentUser = authData.user;
+
+      const {data: club, error: clubErr} = await sb.from('clubs').select('*').eq('owner_id', currentUser.id).single();
+      if(clubErr) throw clubErr;
+      currentClub = club;
+    }
+
+    document.getElementById('pillClubName').textContent = currentClub.name;
+    document.getElementById('pillUserName').textContent = currentClub.representative || 'Représentant';
+    if(currentClub.logo_url){
+      document.getElementById('pillClubIcon').innerHTML = '<img src="' + currentClub.logo_url + '" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />';
+    }
+
+    await loadClubData();
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appRoot').style.display = 'block';
+    renderView('dashboard');
+  } catch(err){
+    errEl.style.color = 'var(--rust-text)';
+    errEl.textContent = err.message || "Une erreur est survenue.";
+    errEl.style.display = 'block';
+  } finally {
+    submitBtn.textContent = 'Accéder au portail';
+    submitBtn.disabled = false;
   }
-
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appRoot').style.display = 'block';
-  renderView('dashboard');
 });
 
 /* ---------------- editable representative name ---------------- */
@@ -1278,9 +1450,14 @@ document.getElementById('pillUser').addEventListener('click', function(){
     '<div class="modal-actions"><button class="btn-ghost" id="cancelRepModal">Annuler</button><button class="btn-solid" id="saveRepModal">Enregistrer</button></div>';
   document.getElementById('closeRepModal').addEventListener('click', closeModal);
   document.getElementById('cancelRepModal').addEventListener('click', closeModal);
-  document.getElementById('saveRepModal').addEventListener('click', function(){
+  document.getElementById('saveRepModal').addEventListener('click', async function(){
     const v = document.getElementById('repNameInput').value.trim();
-    if(v){ document.getElementById('pillUserName').textContent = v; }
+    if(v){
+      document.getElementById('pillUserName').textContent = v;
+      const {error} = await sb.from('clubs').update({representative: v}).eq('id', currentClub.id);
+      if(error){ showToast('Erreur : ' + error.message); closeModal(); return; }
+      currentClub.representative = v;
+    }
     closeModal();
     showToast('Représentant mis à jour');
   });
