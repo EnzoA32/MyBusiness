@@ -44,7 +44,7 @@
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{
-    margin:0; padding:22px;
+    margin:0; padding:16px;
     background:#ffffff;
     min-height:100vh;
     color:var(--ink);
@@ -52,7 +52,7 @@
     -webkit-font-smoothing:antialiased;
   }
 
-  .app-shell{max-width:1320px; margin:0 auto; background:radial-gradient(140% 140% at 15% 10%, #1d5c3a 0%, #123321 55%, #0a2015 100%); border-radius:40px; padding:14px; display:flex; gap:10px; min-height:calc(100vh - 40px); box-shadow:0 30px 60px -24px rgba(8,35,18,0.3);}
+  .app-shell{margin:0 auto; background:radial-gradient(140% 140% at 15% 10%, #1d5c3a 0%, #123321 55%, #0a2015 100%); border-radius:40px; padding:14px; display:flex; gap:10px; min-height:calc(100vh - 44px); box-shadow:0 30px 60px -24px rgba(8,35,18,0.3);}
 
   .sidebar{width:78px; flex-shrink:0; background:transparent; padding:10px 0; display:flex; flex-direction:column; align-items:center; gap:8px;}
   .side-logo{width:40px; height:40px; border-radius:14px; background:#1d5c3a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:17px; margin-bottom:10px;}
@@ -271,10 +271,42 @@
   .empty-view i{font-size:26px; color:var(--text-faint); margin-bottom:10px; display:block;}
 
   ::placeholder{color:var(--text-faint);}
+
+  /* ---------- login screen ---------- */
+  #loginScreen{min-height:calc(100vh - 32px); display:flex; align-items:center; justify-content:center; background:radial-gradient(140% 140% at 20% 10%, #1d5c3a 0%, #123321 55%, #0a2015 100%); border-radius:40px;}
+  .login-card{width:380px; max-width:90vw; background:#fff; border-radius:26px; padding:32px 30px; box-shadow:0 30px 60px -20px rgba(8,35,18,0.35);}
+  .login-mark{width:44px; height:44px; border-radius:14px; background:var(--brand-green); color:var(--side-dark-b); display:flex; align-items:center; justify-content:center; font-size:19px; margin-bottom:16px;}
+  .login-title{font-size:19px; font-weight:800;}
+  .login-sub{font-size:12.5px; color:var(--text-soft); margin-top:2px; margin-bottom:4px;}
 </style>
 </head>
 <body>
 
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-mark"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+    <div class="login-title">Onze+ MyBusiness</div>
+    <div class="login-sub">Le portail de gestion de votre club</div>
+
+    <div class="seg" style="margin:18px 0 20px;">
+      <button class="active" id="tabLogin">Se connecter</button>
+      <button id="tabSignup">Créer un compte</button>
+    </div>
+
+    <div id="signupFields" style="display:none;">
+      <div class="field"><label>Nom du club</label><input id="suClub" placeholder="Rus Hensies" /></div>
+      <div class="field"><label>Votre nom</label><input id="suName" placeholder="Josiah S." /></div>
+    </div>
+    <div class="field"><label>Adresse email</label><input id="loginEmail" type="email" placeholder="vous@club.be" /></div>
+    <div class="field"><label>Mot de passe</label><input id="loginPass" type="password" placeholder="••••••••" /></div>
+
+    <div id="loginError" style="display:none; color:var(--rust-text); font-size:12px; margin-bottom:10px;">Merci de compléter les champs requis.</div>
+
+    <button class="btn-solid" id="loginSubmit" style="width:100%; margin-top:6px;">Accéder au portail</button>
+  </div>
+</div>
+
+<div id="appRoot" style="display:none;">
 <div class="app-shell">
 
   <div class="sidebar">
@@ -297,8 +329,8 @@
     <div class="topbar2">
       <div class="wordmark"><div class="mark"><i class="fa-solid fa-star" aria-hidden="true"></i></div>MyBusiness</div>
       <div class="top-pills">
-        <div class="pill-club"><span class="ic"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>Rus Hensies</div>
-        <div class="pill-user"><span class="ic"><i class="fa-solid fa-user" aria-hidden="true"></i></span>Josiah S.</div>
+        <div class="pill-club"><span class="ic" id="pillClubIcon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span id="pillClubName">Rus Hensies</span></div>
+        <div class="pill-user" id="pillUser" style="cursor:pointer;"><span class="ic"><i class="fa-solid fa-user" aria-hidden="true"></i></span><span id="pillUserName">Josiah S.</span></div>
       </div>
     </div>
 
@@ -308,6 +340,7 @@
     <div id="content"></div>
   </div>
 
+</div>
 </div>
 
 <div class="overlay" id="drawerOverlay"><div class="drawer" id="drawer"></div></div>
@@ -357,10 +390,10 @@ let horaireCategory = 'all';
 let terrains = ['Terrain A - Rue du Stade 1, Hensies', 'Terrain B - Rue du Stade 3, Hensies'];
 
 let staff = [
-  {name:'Marc Delvaux', role:'Entraîneur principal', team:'Seniors F', email:'m.delvaux@mail.com', phone:'0470 11 22 33', status:'actif'},
-  {name:'Julie Petit', role:'Kinésithérapeute', team:'Toutes équipes', email:'j.petit@mail.com', phone:'0470 22 33 44', status:'actif'},
-  {name:'Ahmed Naciri', role:'Entraîneur adjoint', team:'U17', email:'a.naciri@mail.com', phone:'0470 33 44 55', status:'actif'},
-  {name:'Sophie Renard', role:'Secrétaire du club', team:'Toutes équipes', email:'s.renard@mail.com', phone:'0470 44 55 66', status:'inactif'}
+  {name:'Marc Delvaux', role:'Entraîneur principal', team:'Seniors F', email:'m.delvaux@mail.com', phone:'0470 11 22 33', status:'actif', diploma:'UEFA B'},
+  {name:'Julie Petit', role:'Kinésithérapeute', team:'Toutes équipes', email:'j.petit@mail.com', phone:'0470 22 33 44', status:'actif', diploma:''},
+  {name:'Ahmed Naciri', role:'Entraîneur adjoint', team:'U17', email:'a.naciri@mail.com', phone:'0470 33 44 55', status:'actif', diploma:"Brevet d'entraîneur ADEPS 1"},
+  {name:'Sophie Renard', role:'Secrétaire du club', team:'Toutes équipes', email:'s.renard@mail.com', phone:'0470 44 55 66', status:'inactif', diploma:''}
 ];
 const staffRoles = ['Entraîneur principal','Entraîneur adjoint','Kinésithérapeute','Secrétaire du club','Dirigeant','Arbitre du club'];
 const staffTeams = ['Toutes équipes','Seniors F','U17','U15'];
@@ -371,11 +404,11 @@ let reminders = [
   {label:'Réserver le terrain pour le tournoi', due:'—', done:true}
 ];
 
-const documents = [
-  {name:'Assurance club', icon:'fa-shield-halved', status:'ok', date:'Exp. 30/06/2027', bg:'#e0f2ee', color:'#127a63'},
-  {name:'Mutuelle joueurs', icon:'fa-heart', status:'ok', date:'Exp. 01/01/2027', bg:'#fde7e6', color:'#e0403a'},
-  {name:'Statuts du club', icon:'fa-file-lines', status:'ok', date:'À jour', bg:'#e4e9fb', color:'#3d4ea3'},
-  {name:'Assurance RC', icon:'fa-triangle-exclamation', status:'warn', date:'Exp. 12/07/2026', bg:'#fdf1da', color:'#d68a00'}
+let documents = [
+  {name:'Assurance club', icon:'fa-shield-halved', status:'ok', date:'Exp. 30/06/2027', bg:'#e0f2ee', color:'#127a63', fileUrl:null, fileName:null},
+  {name:'Mutuelle joueurs', icon:'fa-heart', status:'ok', date:'Exp. 01/01/2027', bg:'#fde7e6', color:'#e0403a', fileUrl:null, fileName:null},
+  {name:'Statuts du club', icon:'fa-file-lines', status:'ok', date:'À jour', bg:'#e4e9fb', color:'#3d4ea3', fileUrl:null, fileName:null},
+  {name:'Assurance RC', icon:'fa-triangle-exclamation', status:'warn', date:'Exp. 12/07/2026', bg:'#fdf1da', color:'#d68a00', fileUrl:null, fileName:null}
 ];
 
 const pageTitles = {dashboard:'Dashboard', joueurs:'Joueurs', club:'Mon club', horaire:'Horaire', cotisations:'Cotisations', documents:'Documents', parametres:'Paramètres'};
@@ -422,7 +455,67 @@ function renderView(view){
   else if(view === 'joueurs'){ renderJoueurs(); }
   else if(view === 'club'){ renderClub(); }
   else if(view === 'horaire'){ renderHoraire(); }
+  else if(view === 'documents'){ renderDocumentsView(); }
   else { content.innerHTML = '<div class="empty-view"><i class="fa-solid fa-hammer" aria-hidden="true"></i>Bientôt disponible</div>'; }
+}
+
+function renderDocumentsView(){
+  const content = document.getElementById('content');
+  content.innerHTML =
+    '<div class="filters"><button class="btn-pill solid" id="addDocBtn"><i class="fa-solid fa-plus" aria-hidden="true"></i>Ajouter un document</button></div>' +
+    '<div class="tile-grid" id="docGrid" style="grid-template-columns:repeat(3,1fr);"></div>';
+  document.getElementById('addDocBtn').addEventListener('click', openAddDocumentModal);
+  renderDocumentGrid();
+}
+
+function renderDocumentGrid(){
+  document.getElementById('docGrid').innerHTML = documents.map(function(d, i){
+    return '<div class="tile">' +
+      '<div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">' +
+        '<div class="doc-icon" style="width:42px; height:42px; font-size:18px; background:' + d.bg + '; color:' + d.color + ';"><i class="fa-solid ' + d.icon + '" aria-hidden="true"></i></div>' +
+        '<div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:13.5px;">' + d.name + '</div><div style="font-size:11px; color:var(--text-faint);">' + d.date + '</div></div>' +
+        '<span class="doc-status ' + d.status + '">' + (d.status === 'ok' ? 'À jour' : 'À renouveler') + '</span>' +
+      '</div>' +
+      (d.fileName ?
+        ('<div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-soft); margin-bottom:10px;"><i class="fa-solid fa-paperclip" aria-hidden="true"></i>' + d.fileName + '</div>' +
+         '<div style="display:flex; gap:8px;">' +
+           '<a href="' + d.fileUrl + '" download="' + d.fileName + '" class="btn-pill ghost" style="text-decoration:none; height:34px; font-size:11.5px;"><i class="fa-solid fa-download" aria-hidden="true"></i>Télécharger</a>' +
+           '<button class="btn-pill ghost" style="height:34px; font-size:11.5px;" onclick="triggerDocUpload(' + i + ')"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>Remplacer</button>' +
+         '</div>')
+        :
+        '<button class="btn-pill ghost" style="height:34px; font-size:11.5px;" onclick="triggerDocUpload(' + i + ')"><i class="fa-solid fa-upload" aria-hidden="true"></i>Choisir un PDF</button>'
+      ) +
+      '<input type="file" accept="application/pdf" id="docFile' + i + '" style="display:none;" onchange="handleDocUpload(' + i + ', this)" />' +
+    '</div>';
+  }).join('');
+}
+
+function triggerDocUpload(i){ document.getElementById('docFile' + i).click(); }
+function handleDocUpload(i, input){
+  const file = input.files[0];
+  if(!file) return;
+  documents[i].fileUrl = URL.createObjectURL(file);
+  documents[i].fileName = file.name;
+  renderDocumentGrid();
+  showToast('Document mis à jour');
+}
+
+function openAddDocumentModal(){
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-head"><h3>Ajouter un document</h3><button class="drawer-close" id="closeDocModal"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="field"><label>Nom du document</label><input id="newDocName" placeholder="Ex. Convention terrain" /></div>' +
+    '<div class="modal-actions"><button class="btn-ghost" id="cancelDocModal">Annuler</button><button class="btn-solid" id="saveDocModal">Ajouter</button></div>';
+  document.getElementById('closeDocModal').addEventListener('click', closeModal);
+  document.getElementById('cancelDocModal').addEventListener('click', closeModal);
+  document.getElementById('saveDocModal').addEventListener('click', function(){
+    const name = document.getElementById('newDocName').value.trim();
+    if(!name) return;
+    documents.push({name:name, icon:'fa-file-lines', status:'ok', date:'À jour', bg:'#f1f1ef', color:'#5a5f58', fileUrl:null, fileName:null});
+    closeModal();
+    renderDocumentGrid();
+    showToast('Document ajouté');
+  });
+  document.getElementById('modalOverlay').classList.add('show');
 }
 
 function buildDonut(segments, centerLabel, centerValue){
@@ -697,7 +790,7 @@ function staffRowHtml(s, index){
     '<div class="name-col"><div class="player-name">' + s.name + '</div><div class="player-num">' + s.team + '</div></div>' +
     '<div class="email-col">' + s.email + '</div>' +
     '<div class="phone-col">' + s.phone + '</div>' +
-    '<div class="status-col">' + s.role + '</div>' +
+    '<div class="status-col" style="flex-direction:column; align-items:flex-start; gap:0;"><div>' + s.role + '</div>' + (s.diploma ? '<div style="font-size:10.5px; color:var(--text-faint); font-weight:400;">' + s.diploma + '</div>' : '') + '</div>' +
     '<div class="cotis-col" style="width:auto;"><span class="dot ' + (activeStatus ? 'green' : 'rust') + '"></span>' + (activeStatus ? 'Actif' : 'Inactif') + '</div>' +
     '<div class="chev"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></div>' +
   '</div>';
@@ -739,6 +832,7 @@ function openStaffDrawer(s){
     '<div class="drawer-section"><h4>Fonction</h4>' +
       '<div class="drawer-row"><span class="label">Rôle</span><span class="value">' + s.role + '</span></div>' +
       '<div class="drawer-row"><span class="label">Équipe assignée</span><span class="value">' + s.team + '</span></div>' +
+      '<div class="drawer-row"><span class="label">Diplôme</span><span class="value">' + (s.diploma || '—') + '</span></div>' +
     '</div>';
   document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
   document.getElementById('drawerOverlay').classList.add('show');
@@ -870,7 +964,8 @@ function renderAddModalFields(addType){
     '<div class="field-row"><div class="field"><label>Prénom</label><input id="fPrenom" placeholder="Chloé" /></div><div class="field"><label>Nom</label><input id="fNom" placeholder="Dubois" /></div></div>' +
     (isStaff ?
       ('<div class="field"><label>Fonction</label><select id="fRole">' + staffRoles.map(function(r){ return '<option>' + r + '</option>'; }).join('') + '</select></div>' +
-       '<div class="field"><label>Équipe assignée</label><select id="fTeam">' + staffTeams.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select></div>')
+       '<div class="field"><label>Équipe assignée</label><select id="fTeam">' + staffTeams.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select></div>' +
+       '<div class="field"><label>Diplôme de coach (facultatif)</label><input id="fDiploma" placeholder="Ex. UEFA B, ADEPS 1..." /></div>')
       :
       ('<div class="field-row">' +
         '<div class="field"><label>Catégorie</label><select id="fCat"><option>Seniors F</option><option>U17</option><option>U15</option></select></div>' +
@@ -898,7 +993,8 @@ function wireAddModalActions(addType){
         team: document.getElementById('fTeam').value,
         email: document.getElementById('fEmail').value || '—',
         phone: document.getElementById('fPhone').value || '—',
-        status: 'actif'
+        status: 'actif',
+        diploma: document.getElementById('fDiploma').value.trim()
       });
       closeModal();
       rosterMode = 'staff';
@@ -964,8 +1060,8 @@ function openAddSessionModal(){
 function renderClub(){
   document.getElementById('content').innerHTML =
     '<div class="club-card">' +
-      '<div class="club-logo-row"><div class="club-logo" id="clubLogo">RH</div><div><button class="btn-ghost">Changer le logo</button></div></div>' +
-      '<div class="field"><label>Nom du club</label><input id="clubName" value="Rus Hensies" /></div>' +
+      '<div class="club-logo-row"><div class="club-logo" id="clubLogo">RH</div><div><button class="btn-ghost" id="changeLogoBtn">Changer le logo</button><input type="file" accept="image/*" id="logoFile" style="display:none;" /></div></div>' +
+      '<div class="field"><label>Nom du club</label><input id="clubName" value="' + document.getElementById('pillClubName').textContent + '" /></div>' +
       '<div class="field-row">' +
         '<div class="field"><label>Matricule</label><input id="clubMatricule" value="8214" /></div>' +
         '<div class="field"><label>Saison</label><input value="2025/26" disabled /></div>' +
@@ -976,7 +1072,21 @@ function renderClub(){
     '</div>';
   renderTerrains();
   document.getElementById('addTerrain').addEventListener('click', function(){ terrains.push(''); renderTerrains(); });
-  document.getElementById('saveClub').addEventListener('click', function(){ showToast('Modifications enregistrées'); });
+  document.getElementById('saveClub').addEventListener('click', function(){
+    document.getElementById('pillClubName').textContent = document.getElementById('clubName').value.trim() || 'Rus Hensies';
+    showToast('Modifications enregistrées');
+  });
+  document.getElementById('changeLogoBtn').addEventListener('click', function(){ document.getElementById('logoFile').click(); });
+  document.getElementById('logoFile').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    const style = 'background-image:url(' + url + '); background-size:cover; background-position:center;';
+    document.getElementById('clubLogo').setAttribute('style', style);
+    document.getElementById('clubLogo').textContent = '';
+    document.getElementById('pillClubIcon').innerHTML = '<img src="' + url + '" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />';
+    showToast('Logo mis à jour');
+  });
 }
 
 function renderTerrains(){
@@ -1064,7 +1174,56 @@ function showToast(msg){
   setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
 
-renderView('dashboard');
+/* ---------------- login / signup ---------------- */
+document.getElementById('tabLogin').addEventListener('click', function(){
+  document.getElementById('tabLogin').classList.add('active');
+  document.getElementById('tabSignup').classList.remove('active');
+  document.getElementById('signupFields').style.display = 'none';
+});
+document.getElementById('tabSignup').addEventListener('click', function(){
+  document.getElementById('tabSignup').classList.add('active');
+  document.getElementById('tabLogin').classList.remove('active');
+  document.getElementById('signupFields').style.display = 'block';
+});
+document.getElementById('loginSubmit').addEventListener('click', function(){
+  const isSignup = document.getElementById('tabSignup').classList.contains('active');
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  if(!email || !pass || (isSignup && (!document.getElementById('suClub').value.trim() || !document.getElementById('suName').value.trim()))){
+    document.getElementById('loginError').style.display = 'block';
+    return;
+  }
+  document.getElementById('loginError').style.display = 'none';
+
+  if(isSignup){
+    const clubName = document.getElementById('suClub').value.trim();
+    const repName = document.getElementById('suName').value.trim();
+    document.getElementById('pillClubName').textContent = clubName;
+    document.getElementById('pillUserName').textContent = repName;
+    document.getElementById('clubName') && (document.getElementById('clubName').value = clubName);
+  }
+
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  renderView('dashboard');
+});
+
+/* ---------------- editable representative name ---------------- */
+document.getElementById('pillUser').addEventListener('click', function(){
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-head"><h3>Représentant du club</h3><button class="drawer-close" id="closeRepModal"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
+    '<div class="field"><label>Nom du représentant</label><input id="repNameInput" value="' + document.getElementById('pillUserName').textContent + '" /></div>' +
+    '<div class="modal-actions"><button class="btn-ghost" id="cancelRepModal">Annuler</button><button class="btn-solid" id="saveRepModal">Enregistrer</button></div>';
+  document.getElementById('closeRepModal').addEventListener('click', closeModal);
+  document.getElementById('cancelRepModal').addEventListener('click', closeModal);
+  document.getElementById('saveRepModal').addEventListener('click', function(){
+    const v = document.getElementById('repNameInput').value.trim();
+    if(v){ document.getElementById('pillUserName').textContent = v; }
+    closeModal();
+    showToast('Représentant mis à jour');
+  });
+  document.getElementById('modalOverlay').classList.add('show');
+});
 </script>
 
 </body>
