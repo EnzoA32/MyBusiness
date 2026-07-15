@@ -83,6 +83,8 @@
   .pill-club .ic{width:26px; height:26px; border-radius:50%; background:#fdeceb; color:#8a2f28; display:flex; align-items:center; justify-content:center; font-size:11px;}
   .pill-user{display:flex; align-items:center; gap:8px; background:var(--side-dark-a); color:#fff; padding:6px 16px 6px 6px; border-radius:999px; font-size:12.5px; font-weight:600;}
   .pill-user .ic{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:11px;}
+  .icon-btn-logout{width:38px; height:38px; border-radius:50%; border:1px solid var(--line-strong); background:rgba(255,255,255,0.9); color:var(--text-soft); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .icon-btn-logout:hover{background:var(--rust-tint); color:var(--rust-text); border-color:transparent;}
 
   .date-line{color:var(--brand-green-deep); font-size:12.5px; font-weight:600; margin-bottom:3px;}
   .page-title-big{font-size:28px; font-weight:800; color:var(--ink); margin-bottom:6px; letter-spacing:-0.01em;}
@@ -369,6 +371,7 @@
       <div class="top-pills">
         <div class="pill-club"><span class="ic" id="pillClubIcon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span id="pillClubName">Rus Hensies</span></div>
         <div class="pill-user" id="pillUser" style="cursor:pointer;"><span class="ic"><i class="fa-solid fa-user" aria-hidden="true"></i></span><span id="pillUserName">Josiah S.</span></div>
+        <button class="icon-btn-logout" id="logoutBtn" title="Se déconnecter"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i></button>
       </div>
     </div>
 
@@ -1344,6 +1347,37 @@ function showToast(msg){
   t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
+
+/* ---------------- session persistence + logout ---------------- */
+async function restoreSession(){
+  const {data: {session}} = await sb.auth.getSession();
+  if(!session){ return; }
+  currentUser = session.user;
+  const {data: club, error} = await sb.from('mybusiness_clubs').select('*').eq('owner_id', currentUser.id).single();
+  if(error || !club){ return; }
+  currentClub = club;
+  document.getElementById('pillClubName').textContent = currentClub.name;
+  document.getElementById('pillUserName').textContent = currentClub.representative || 'Représentant';
+  if(currentClub.logo_url){
+    document.getElementById('pillClubIcon').innerHTML = '<img src="' + currentClub.logo_url + '" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />';
+  }
+  await loadClubData();
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  renderView('dashboard');
+}
+restoreSession();
+
+document.getElementById('logoutBtn').addEventListener('click', async function(){
+  await sb.auth.signOut();
+  currentUser = null;
+  currentClub = null;
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPass').value = '';
+  showToast('Déconnecté');
+});
 
 /* ---------------- login / signup ---------------- */
 document.getElementById('tabLogin').addEventListener('click', function(){
