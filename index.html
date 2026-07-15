@@ -390,8 +390,8 @@
    SUPABASE CONFIG — remplace ces deux valeurs par celles de ton
    projet (Project Settings > API dans le dashboard Supabase).
    ============================================================ */
-const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
+const SUPABASE_URL = 'https://ofuaupksihcaalnlbavx.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_JIxnUDcSKzXF8j1ZEeUjzA_4rI1IyFD';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
@@ -429,12 +429,12 @@ function cotisTint(v){
 /* ---------------- load everything for the logged-in club ---------------- */
 async function loadClubData(){
   const [pRes, sRes, dRes, tRes, rRes, sessRes] = await Promise.all([
-    sb.from('players').select('*').eq('club_id', currentClub.id).order('name'),
-    sb.from('staff').select('*').eq('club_id', currentClub.id).order('name'),
-    sb.from('documents').select('*').eq('club_id', currentClub.id),
-    sb.from('terrains').select('*').eq('club_id', currentClub.id),
-    sb.from('reminders').select('*').eq('club_id', currentClub.id),
-    sb.from('sessions').select('*').eq('club_id', currentClub.id)
+    sb.from('mybusiness_players').select('*').eq('club_id', currentClub.id).order('name'),
+    sb.from('mybusiness_staff').select('*').eq('club_id', currentClub.id).order('name'),
+    sb.from('mybusiness_documents').select('*').eq('club_id', currentClub.id),
+    sb.from('mybusiness_terrains').select('*').eq('club_id', currentClub.id),
+    sb.from('mybusiness_reminders').select('*').eq('club_id', currentClub.id),
+    sb.from('mybusiness_sessions').select('*').eq('club_id', currentClub.id)
   ]);
 
   players = (pRes.data || []).map(function(p){ return {id:p.id, name:p.name, number:p.number, category:p.category, status:p.status, cotis:p.cotis, email:p.email, phone:p.phone, address:p.address, birth:p.birth, licence:p.licence}; });
@@ -452,7 +452,7 @@ async function loadClubData(){
 
   if(terrains.length === 0){
     // seed two default terrains so Horaire has somewhere to show sessions
-    const {data} = await sb.from('terrains').insert([
+    const {data} = await sb.from('mybusiness_terrains').insert([
       {club_id: currentClub.id, name:'Terrain A', address:''},
       {club_id: currentClub.id, name:'Terrain B', address:''}
     ]).select();
@@ -533,7 +533,7 @@ function renderParametresView(){
     const {error: upErr} = await sb.storage.from('logos').upload(path, file, {upsert:true});
     if(upErr){ showToast('Erreur upload : ' + upErr.message); return; }
     const {data:{publicUrl}} = sb.storage.from('logos').getPublicUrl(path);
-    await sb.from('clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
+    await sb.from('mybusiness_clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
     currentClub.logo_url = publicUrl;
     document.getElementById('paramLogo').setAttribute('style', 'background-image:url(' + publicUrl + '); background-size:cover; background-position:center;');
     document.getElementById('paramLogo').textContent = '';
@@ -546,7 +546,7 @@ function renderParametresView(){
       name: document.getElementById('paramClubName').value.trim() || currentClub.name,
       representative: document.getElementById('paramRepName').value.trim() || currentClub.representative
     };
-    const {error} = await sb.from('clubs').update(updates).eq('id', currentClub.id);
+    const {error} = await sb.from('mybusiness_clubs').update(updates).eq('id', currentClub.id);
     if(error){ showToast('Erreur : ' + error.message); return; }
     Object.assign(currentClub, updates);
     document.getElementById('pillClubName').textContent = currentClub.name;
@@ -603,7 +603,7 @@ async function handleDocUpload(i, input){
   const {error: upErr} = await sb.storage.from('documents').upload(path, file, {upsert:true});
   if(upErr){ showToast('Erreur upload : ' + upErr.message); return; }
   const {data:{publicUrl}} = sb.storage.from('documents').getPublicUrl(path);
-  const {error} = await sb.from('documents').update({file_url: publicUrl, file_name: file.name}).eq('id', documents[i].id);
+  const {error} = await sb.from('mybusiness_documents').update({file_url: publicUrl, file_name: file.name}).eq('id', documents[i].id);
   if(error){ showToast('Erreur : ' + error.message); return; }
   documents[i].fileUrl = publicUrl;
   documents[i].fileName = file.name;
@@ -622,7 +622,7 @@ function openAddDocumentModal(){
     const name = document.getElementById('newDocName').value.trim();
     if(!name) return;
     const row = {club_id: currentClub.id, name:name, icon:'fa-file-lines', status:'ok', date_info:'À jour', bg:'#f1f1ef', color:'#5a5f58'};
-    const {data, error} = await sb.from('documents').insert(row).select().single();
+    const {data, error} = await sb.from('mybusiness_documents').insert(row).select().single();
     if(error){ showToast('Erreur : ' + error.message); return; }
     documents.push({id:data.id, name:data.name, icon:data.icon, status:data.status, date:data.date_info, bg:data.bg, color:data.color, fileUrl:null, fileName:null});
     closeModal();
@@ -765,7 +765,7 @@ function renderReminders(){
       const i = parseInt(el.dataset.i);
       reminders[i].done = !reminders[i].done;
       renderReminders();
-      const {error} = await sb.from('reminders').update({done: reminders[i].done}).eq('id', reminders[i].id);
+      const {error} = await sb.from('mybusiness_reminders').update({done: reminders[i].done}).eq('id', reminders[i].id);
       if(error){ showToast('Erreur : ' + error.message); }
     });
   });
@@ -775,7 +775,7 @@ async function addReminder(){
   const label = window.prompt('Nouveau rappel :');
   if(!label || !label.trim()) return;
   const row = {club_id: currentClub.id, label: label.trim(), due: '—', done:false};
-  const {data, error} = await sb.from('reminders').insert(row).select().single();
+  const {data, error} = await sb.from('mybusiness_reminders').insert(row).select().single();
   if(error){ showToast('Erreur : ' + error.message); return; }
   reminders.push({id:data.id, label:data.label, due:data.due, done:data.done});
   renderReminders();
@@ -1124,7 +1124,7 @@ function wireAddModalActions(addType){
         status: 'actif',
         diploma: document.getElementById('fDiploma').value.trim()
       };
-      const {data, error} = await sb.from('staff').insert(row).select().single();
+      const {data, error} = await sb.from('mybusiness_staff').insert(row).select().single();
       if(error){ showToast('Erreur : ' + error.message); return; }
       staff.push({id:data.id, name:data.name, role:data.role, team:data.team, email:data.email, phone:data.phone, status:data.status, diploma:data.diploma});
       closeModal();
@@ -1145,7 +1145,7 @@ function wireAddModalActions(addType){
         birth: '—',
         licence: '—'
       };
-      const {data, error} = await sb.from('players').insert(row).select().single();
+      const {data, error} = await sb.from('mybusiness_players').insert(row).select().single();
       if(error){ showToast('Erreur : ' + error.message); return; }
       players.push({id:data.id, name:data.name, number:data.number, category:data.category, status:data.status, cotis:data.cotis, email:data.email, phone:data.phone, address:data.address, birth:data.birth, licence:data.licence});
       closeModal();
@@ -1184,7 +1184,7 @@ function openAddSessionModal(){
       category: cat,
       field: document.getElementById('sField').value
     };
-    const {data, error} = await sb.from('sessions').insert(row).select().single();
+    const {data, error} = await sb.from('mybusiness_sessions').insert(row).select().single();
     if(error){ showToast('Erreur : ' + error.message); return; }
     if(!sessionsByMonth[currentMonth]){ sessionsByMonth[currentMonth] = []; }
     sessionsByMonth[currentMonth].push({id:data.id, day:data.day, time:data.time_range, team:data.category, category:data.category, field:data.field});
@@ -1213,7 +1213,7 @@ function renderClub(){
   }
   renderTerrains();
   document.getElementById('addTerrain').addEventListener('click', async function(){
-    const {data, error} = await sb.from('terrains').insert({club_id: currentClub.id, name:'Nouveau terrain', address:''}).select().single();
+    const {data, error} = await sb.from('mybusiness_terrains').insert({club_id: currentClub.id, name:'Nouveau terrain', address:''}).select().single();
     if(error){ showToast('Erreur : ' + error.message); return; }
     terrains.push({id:data.id, label:data.name, name:data.name, address:data.address});
     renderTerrains();
@@ -1224,7 +1224,7 @@ function renderClub(){
       matricule: document.getElementById('clubMatricule').value.trim(),
       address: document.getElementById('clubAddress').value.trim()
     };
-    const {error} = await sb.from('clubs').update(updates).eq('id', currentClub.id);
+    const {error} = await sb.from('mybusiness_clubs').update(updates).eq('id', currentClub.id);
     if(error){ showToast('Erreur : ' + error.message); return; }
     Object.assign(currentClub, updates);
     document.getElementById('pillClubName').textContent = currentClub.name;
@@ -1238,7 +1238,7 @@ function renderClub(){
     const {error: upErr} = await sb.storage.from('logos').upload(path, file, {upsert:true});
     if(upErr){ showToast('Erreur upload : ' + upErr.message); return; }
     const {data:{publicUrl}} = sb.storage.from('logos').getPublicUrl(path);
-    const {error} = await sb.from('clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
+    const {error} = await sb.from('mybusiness_clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
     if(error){ showToast('Erreur : ' + error.message); return; }
     currentClub.logo_url = publicUrl;
     document.getElementById('clubLogo').setAttribute('style', 'background-image:url(' + publicUrl + '); background-size:cover; background-position:center;');
@@ -1258,14 +1258,14 @@ function renderTerrains(){
       const i = parseInt(e.target.dataset.i);
       const field = e.target.dataset.field;
       terrains[i][field] = e.target.value;
-      const {error} = await sb.from('terrains').update({[field]: e.target.value}).eq('id', terrains[i].id);
+      const {error} = await sb.from('mybusiness_terrains').update({[field]: e.target.value}).eq('id', terrains[i].id);
       if(error){ showToast('Erreur : ' + error.message); }
     });
   });
   mount.querySelectorAll('.icon-x').forEach(function(btn){
     btn.addEventListener('click', async function(){
       const i = parseInt(btn.dataset.i);
-      const {error} = await sb.from('terrains').delete().eq('id', terrains[i].id);
+      const {error} = await sb.from('mybusiness_terrains').delete().eq('id', terrains[i].id);
       if(error){ showToast('Erreur : ' + error.message); return; }
       terrains.splice(i, 1);
       renderTerrains();
@@ -1399,7 +1399,7 @@ document.getElementById('loginSubmit').addEventListener('click', async function(
       }
       currentUser = authData.user;
 
-      const {data: club, error: clubErr} = await sb.from('clubs').insert({owner_id: currentUser.id, name: clubName, representative: repName}).select().single();
+      const {data: club, error: clubErr} = await sb.from('mybusiness_clubs').insert({owner_id: currentUser.id, name: clubName, representative: repName}).select().single();
       if(clubErr) throw clubErr;
       currentClub = club;
 
@@ -1408,7 +1408,7 @@ document.getElementById('loginSubmit').addEventListener('click', async function(
         const {error: upErr} = await sb.storage.from('logos').upload(path, suLogoFileRef, {upsert:true});
         if(!upErr){
           const {data:{publicUrl}} = sb.storage.from('logos').getPublicUrl(path);
-          await sb.from('clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
+          await sb.from('mybusiness_clubs').update({logo_url: publicUrl}).eq('id', currentClub.id);
           currentClub.logo_url = publicUrl;
         }
       }
@@ -1417,7 +1417,7 @@ document.getElementById('loginSubmit').addEventListener('click', async function(
       if(authErr) throw authErr;
       currentUser = authData.user;
 
-      const {data: club, error: clubErr} = await sb.from('clubs').select('*').eq('owner_id', currentUser.id).single();
+      const {data: club, error: clubErr} = await sb.from('mybusiness_clubs').select('*').eq('owner_id', currentUser.id).single();
       if(clubErr) throw clubErr;
       currentClub = club;
     }
@@ -1454,7 +1454,7 @@ document.getElementById('pillUser').addEventListener('click', function(){
     const v = document.getElementById('repNameInput').value.trim();
     if(v){
       document.getElementById('pillUserName').textContent = v;
-      const {error} = await sb.from('clubs').update({representative: v}).eq('id', currentClub.id);
+      const {error} = await sb.from('mybusiness_clubs').update({representative: v}).eq('id', currentClub.id);
       if(error){ showToast('Erreur : ' + error.message); closeModal(); return; }
       currentClub.representative = v;
     }
